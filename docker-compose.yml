@@ -10,9 +10,9 @@ services:
       - .:/usr/src/app
     command: npm run dev
     expose:
-      - 3000
+      - 3333
     ports:
-      - "3000:3000"
+      - "3333:3333"
     depends_on:
       - db
   db:

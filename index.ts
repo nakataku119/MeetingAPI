@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 app.use(express.json());
 
 app.get("/", (req: express.Request, res: express.Response) => {
-  res.send("こんにち");
+  res.send("hello");
 });
 
 app.get("/users", async (req: express.Request, res: express.Response) => {

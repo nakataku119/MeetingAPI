@@ -1,0 +1,27 @@
+version: "3"
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: meeting-api
+    volumes:
+      - /usr/src/node_modules
+      - .:/usr/src/app
+    command: npm run dev
+    expose:
+      - 3000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+  db:
+    image: mysql:8.0.28
+    platform: linux/amd64
+    container_name: meeting-db
+    volumes:
+      - ./my.cnf:/etc/mysql/conf.d/my.cnf
+    env_file:
+      - .env
+    ports:
+      - "3306:3306"

@@ -1,8 +1,16 @@
 import express from "express";
 import { PrismaClient } from "@prisma/client";
+import cors from "cors";
+
 const app: express.Express = express();
 const prisma = new PrismaClient();
 app.use(express.json());
+
+const allowedOrigins = ["http://localhost:3000"];
+const options: cors.CorsOptions = {
+  origin: allowedOrigins,
+};
+app.use(cors(options));
 // topページへアクセス
 app.get("/", (req: express.Request, res: express.Response) => {
   res.send("hello");

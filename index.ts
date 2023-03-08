@@ -36,6 +36,19 @@ app.put("/users/:id", async (req: express.Request, res: express.Response) => {
   });
   return res.json(user);
 });
+// Userデータの削除
+app.delete(
+  "/users/:id",
+  async (req: express.Request, res: express.Response) => {
+    const id = req.params.id;
+    const user = await prisma.user.delete({
+      where: {
+        id,
+      },
+    });
+    return res.json(user);
+  }
+);
 
 app.listen(3000, () => {
   console.log("3000起動");

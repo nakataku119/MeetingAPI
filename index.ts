@@ -12,6 +12,16 @@ app.get("/users", async (req: express.Request, res: express.Response) => {
   const users = await prisma.user.findMany();
   return res.json(users);
 });
+// 特定ユーザーの取得
+app.get("/users/:id", async (req: express.Request, res: express.Response) => {
+  const id = req.params.id;
+  const user = await prisma.user.findUnique({
+    where: {
+      id,
+    },
+  });
+  return res.json(user);
+});
 // Userデータの追加
 app.post("/users", async (req: express.Request, res: express.Response) => {
   const { id, name } = req.body;

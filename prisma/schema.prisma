@@ -11,6 +11,28 @@ datasource db {
 }
 
 model User {
-  id Int @id @default(autoincrement())
+  id    String     @id
   name String
+  teams Team[]
+  mtgs Mtg[]
+}
+
+model Team {
+  id Int     @id @default(autoincrement())
+  name String
+  users User[]
+}
+
+model Mtg {
+  id Int     @id @default(autoincrement())
+  schedule DateTime
+  users User[]
+  topics Topic[]
+}
+
+model Topic {
+  id Int     @id @default(autoincrement())
+  content String
+  mtg Mtg @relation(fields: [mtgId], references: [id])
+  mtgId Int
 }

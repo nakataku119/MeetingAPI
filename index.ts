@@ -2,6 +2,7 @@ import express from "express";
 import { PrismaClient } from "@prisma/client";
 import cors from "cors";
 import { auth } from "express-oauth2-jwt-bearer";
+import jwt_decode from "jwt-decode";
 
 const checkJwt = auth({
   audience: "https://meeting-app-back",
@@ -27,6 +28,10 @@ app.get(
   "/users",
   checkJwt,
   async (req: express.Request, res: express.Response) => {
+    const decoded: { sub: string } = jwt_decode(
+      req.headers["authorization"]?.split(" ")[1]!
+    );
+    console.log(decoded.sub);
     const users = await prisma.user.findMany();
     return res.json(users);
   }

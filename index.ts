@@ -1,6 +1,13 @@
 import express from "express";
 import { PrismaClient } from "@prisma/client";
 import cors from "cors";
+import { auth } from "express-oauth2-jwt-bearer";
+
+const checkJwt = auth({
+  audience: "https://meeting-app-back",
+  issuerBaseURL: "https://dev-8qn600b6uii32mqx.us.auth0.com",
+  tokenSigningAlg: "RS256",
+});
 
 const app: express.Express = express();
 const prisma = new PrismaClient();
@@ -16,10 +23,14 @@ app.get("/", (req: express.Request, res: express.Response) => {
   res.send("hello");
 });
 // User一覧の取得
-app.get("/users", async (req: express.Request, res: express.Response) => {
-  const users = await prisma.user.findMany();
-  return res.json(users);
-});
+app.get(
+  "/users",
+  checkJwt,
+  async (req: express.Request, res: express.Response) => {
+    const users = await prisma.user.findMany();
+    return res.json(users);
+  }
+);
 // 特定ユーザーの取得
 app.get("/users/:id", async (req: express.Request, res: express.Response) => {
   const id = req.params.id;
@@ -39,6 +50,7 @@ app.post("/users", async (req: express.Request, res: express.Response) => {
       name: name,
     },
   });
+  console.log(req);
   return res.json(user);
 });
 // Userデータの更新

@@ -1,4 +1,4 @@
-import express from "express";
+import express, { NextFunction } from "express";
 import { PrismaClient } from "@prisma/client";
 import cors from "cors";
 import { auth } from "express-oauth2-jwt-bearer";
@@ -19,6 +19,19 @@ const options: cors.CorsOptions = {
   origin: allowedOrigins,
 };
 app.use(cors(options));
+// リクエストボディにユーザーIDを追加する共通処理
+app.use(
+  "/*",
+  function (req: express.Request, res: express.Response, next: NextFunction) {
+    if (req.headers["authorization"]?.split(" ")[1]) {
+      const decoded: { sub: string } = jwt_decode(
+        req.headers["authorization"].split(" ")[1]
+      );
+      req.body.id = decoded.sub;
+    }
+    next();
+  }
+);
 // topページへアクセス
 app.get("/", (req: express.Request, res: express.Response) => {
   res.send("hello");
@@ -55,7 +68,6 @@ app.post("/users", async (req: express.Request, res: express.Response) => {
       name: name,
     },
   });
-  console.log(req);
   return res.json(user);
 });
 // Userデータの更新

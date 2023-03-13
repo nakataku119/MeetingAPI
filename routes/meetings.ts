@@ -4,14 +4,17 @@ import { PrismaClient } from "@prisma/client";
 const router = Router();
 const prisma = new PrismaClient();
 
-// 新規ミーティング作成、同時にユーザーも追加
+// 新規ミーティング作成、同時にユーザーも追加、トピックも作成
 router.post("/mtgs", async (req: Request, res: Response) => {
-  const { schedule, useId } = req.body;
+  const { schedule, userId, content } = req.body;
   const mtg = await prisma.mtg.create({
     data: {
-      schedule,
+      schedule: schedule,
       users: {
-        connect: [{ id: useId }],
+        connect: [{ id: userId }],
+      },
+      topics: {
+        create: [{ content }],
       },
     },
   });

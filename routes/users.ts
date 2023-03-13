@@ -66,5 +66,18 @@ router.get("/users/:id/mtgs", async (req: Request, res: Response) => {
   });
   return res.json(user_mtgs);
 });
+// 紐づくチームの取得
+router.get("/users/:id/teams", async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const user_teams = await prisma.user.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      teams: true,
+    },
+  });
+  return res.json(user_teams);
+});
 
 export default router;

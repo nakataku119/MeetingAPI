@@ -4,8 +4,9 @@ import { PrismaClient } from "@prisma/client";
 const router = Router();
 const prisma = new PrismaClient();
 
-// TeamとUserの中間テーブルへ保存
-router.post("/teams/:team_id/users", async (req: Request, res: Response) => {
+// 既存チームへユーザーの追加
+// チーム管理者のみ可能？
+router.put("/teams/:team_id/users", async (req: Request, res: Response) => {
   const { userId } = req.body;
   const teamId = Number(req.params.team_id);
   const teamToUser = await prisma.team.update({

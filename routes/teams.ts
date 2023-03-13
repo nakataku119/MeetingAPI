@@ -4,7 +4,7 @@ import { PrismaClient } from "@prisma/client";
 const router = Router();
 const prisma = new PrismaClient();
 
-// Teamデータの追加
+// 新規チーム作成
 router.post("/teams", async (req: Request, res: Response) => {
   const { name } = req.body;
   const team = await prisma.team.create({
@@ -14,12 +14,12 @@ router.post("/teams", async (req: Request, res: Response) => {
   });
   return res.json(team);
 });
-// Team一覧の取得
+// 全チームの呼び出し
 router.get("/teams", async (req: Request, res: Response) => {
   const teams = await prisma.team.findMany();
   return res.json(teams);
 });
-// 特定チームの取得
+// あるチームの呼び出し
 router.get("/teams/:id", async (req: Request, res: Response) => {
   const id = Number(req.params.id);
   const team = await prisma.team.findUnique({
@@ -29,7 +29,7 @@ router.get("/teams/:id", async (req: Request, res: Response) => {
   });
   return res.json(team);
 });
-// Teamデータの更新
+// チームの更新
 router.put("/teams/:id", async (req: Request, res: Response) => {
   const id = Number(req.params.id);
   const { name } = req.body;
@@ -43,7 +43,7 @@ router.put("/teams/:id", async (req: Request, res: Response) => {
   });
   return res.json(team);
 });
-// Teamデータの削除
+// チームの削除
 router.delete("/teams/:id", async (req: Request, res: Response) => {
   const id = Number(req.params.id);
   const team = await prisma.team.delete({
@@ -53,7 +53,7 @@ router.delete("/teams/:id", async (req: Request, res: Response) => {
   });
   return res.json(team);
 });
-// 紐づくユーザーの取得
+// 関連するユーザーの呼び出し
 router.get("/teams/:id/users", async (req: Request, res: Response) => {
   const id = Number(req.params.id);
   const team_users = await prisma.team.findUnique({

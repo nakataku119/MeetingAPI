@@ -53,7 +53,6 @@ router.delete("/mtgs/:id", async (req: Request, res: Response) => {
   });
   return res.json(mtg);
 });
-
 // 紐付いたTopicデータの取得
 router.get("/mtgs/:id/topics", async (req: Request, res: Response) => {
   const id = Number(req.params.id);
@@ -63,6 +62,19 @@ router.get("/mtgs/:id/topics", async (req: Request, res: Response) => {
     },
     include: {
       topics: true,
+    },
+  });
+  return res.json(mtg_topics);
+});
+// 紐付いたUserデータの取得
+router.get("/mtgs/:id/users", async (req: Request, res: Response) => {
+  const id = Number(req.params.id);
+  const mtg_topics = await prisma.mtg.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      users: true,
     },
   });
   return res.json(mtg_topics);

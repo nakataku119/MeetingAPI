@@ -4,49 +4,31 @@ import { PrismaClient } from "@prisma/client";
 const router = Router();
 const prisma = new PrismaClient();
 
-// Meetingデータの追加
+// 新規ミーティング作成、同時にユーザーも追加、トピックも作成
 router.post("/mtgs", async (req: Request, res: Response) => {
-  const { schedule } = req.body;
+  const { schedule, userId, content } = req.body;
   const mtg = await prisma.mtg.create({
     data: {
-      schedule,
+      schedule: schedule,
+      users: {
+        connect: [{ id: userId }],
+      },
+      topics: {
+        create: [{ content }],
+      },
     },
   });
   return res.json(mtg);
 });
-// Meeting一覧の取得
+// 全ミーティングの呼び出し
 router.get("/mtgs", async (req: Request, res: Response) => {
   const mtgs = await prisma.mtg.findMany();
   return res.json(mtgs);
 });
-// 特定Meetingの取得
+// あるミーティングの呼び出し
 router.get("/mtgs/:id", async (req: Request, res: Response) => {
   const id = Number(req.params.id);
   const mtg = await prisma.mtg.findUnique({
-    where: {
-      id,
-    },
-  });
-  return res.json(mtg);
-});
-// Meetingデータの更新
-router.put("/mtgs/:id", async (req: Request, res: Response) => {
-  const id = Number(req.params.id);
-  const { schedule } = req.body;
-  const mtg = await prisma.mtg.update({
-    where: {
-      id,
-    },
-    data: {
-      schedule,
-    },
-  });
-  return res.json(mtg);
-});
-// Meetingデータの削除
-router.delete("/mtgs/:id", async (req: Request, res: Response) => {
-  const id = Number(req.params.id);
-  const mtg = await prisma.mtg.delete({
     where: {
       id,
     },
@@ -78,6 +60,37 @@ router.get("/mtgs/:id/users", async (req: Request, res: Response) => {
     },
   });
   return res.json(mtg_topics);
+});
+// ミーティングの更新、同時に参加者も更新
+// 個別に招待するか検討
+router.put("/mtgs/:id", async (req: Request, res: Response) => {
+  const id = Number(req.params.id);
+  const { schedule, userId } = req.body;
+  const mtg = await prisma.mtg.update({
+    where: {
+      id,
+    },
+    data: {
+      schedule,
+      users: {
+        // 既存メンバーがリセットされる
+        set: [{ id: userId }],
+        // 既存メンバーに追加する
+        // connect: [{ id: userId }]
+      },
+    },
+  });
+  return res.json(mtg);
+});
+// Meetingデータの削除
+router.delete("/mtgs/:id", async (req: Request, res: Response) => {
+  const id = Number(req.params.id);
+  const mtg = await prisma.mtg.delete({
+    where: {
+      id,
+    },
+  });
+  return res.json(mtg);
 });
 
 export default router;

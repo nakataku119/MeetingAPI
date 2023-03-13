@@ -4,12 +4,15 @@ import { PrismaClient } from "@prisma/client";
 const router = Router();
 const prisma = new PrismaClient();
 
-// 新規チーム作成
+// 新規チーム作成、同時にユーザーも追加
 router.post("/teams", async (req: Request, res: Response) => {
-  const { name } = req.body;
+  const { name, userId } = req.body;
   const team = await prisma.team.create({
     data: {
       name: name,
+      users: {
+        connect: { id: userId },
+      },
     },
   });
   return res.json(team);

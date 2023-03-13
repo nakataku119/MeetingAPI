@@ -13,7 +13,7 @@ router.put("/teams/:team_id/users", async (req: Request, res: Response) => {
     where: { id: teamId },
     data: {
       // users: { set: [{ id: userId }, { id: "3" }, { id: "4" }] },
-      users: { set: [{ id: userId }] },
+      users: { connect: [{ id: userId }] },
     },
   });
   return res.json(teamToUser);

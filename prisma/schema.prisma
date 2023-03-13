@@ -25,7 +25,7 @@ model Team {
 
 model Mtg {
   id Int     @id @default(autoincrement())
-  schedule DateTime
+  schedule DateTime?
   users User[]
   topics Topic[]
 }

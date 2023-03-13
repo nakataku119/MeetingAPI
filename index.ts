@@ -3,6 +3,7 @@ import cors from "cors";
 import { auth } from "express-oauth2-jwt-bearer";
 import jwt_decode from "jwt-decode";
 import usersRoutes from "./routes/users";
+import teamsRoutes from "./routes/teams";
 
 const checkJwt = auth({
   audience: "https://meeting-app-back",
@@ -32,7 +33,7 @@ app.use(
   }
 );
 
-app.use("/", usersRoutes);
+app.use("/", usersRoutes, teamsRoutes);
 
 // topページへアクセス
 app.get("/", (req: express.Request, res: express.Response) => {

@@ -53,5 +53,18 @@ router.delete("/users/:id", async (req: Request, res: Response) => {
   });
   return res.json(user);
 });
+// 紐づくミーティングの取得
+router.get("/users/:id/mtgs", async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const user_mtgs = await prisma.user.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      mtgs: true,
+    },
+  });
+  return res.json(user_mtgs);
+});
 
 export default router;

@@ -54,4 +54,18 @@ router.delete("/mtgs/:id", async (req: Request, res: Response) => {
   return res.json(mtg);
 });
 
+// 紐付いたTopiデータの取得
+router.get("/mtgs/:id/topics", async (req: Request, res: Response) => {
+  const id = Number(req.params.id);
+  const mtg_topics = await prisma.mtg.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      topics: true,
+    },
+  });
+  return res.json(mtg_topics);
+});
+
 export default router;

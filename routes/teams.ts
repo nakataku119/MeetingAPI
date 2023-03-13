@@ -43,7 +43,7 @@ router.put("/teams/:id", async (req: Request, res: Response) => {
   });
   return res.json(team);
 });
-// Topicデータの削除
+// Teamデータの削除
 router.delete("/teams/:id", async (req: Request, res: Response) => {
   const id = Number(req.params.id);
   const team = await prisma.team.delete({
@@ -52,6 +52,19 @@ router.delete("/teams/:id", async (req: Request, res: Response) => {
     },
   });
   return res.json(team);
+});
+// 紐づくユーザーの取得
+router.get("/teams/:id/users", async (req: Request, res: Response) => {
+  const id = Number(req.params.id);
+  const team_users = await prisma.team.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      users: true,
+    },
+  });
+  return res.json(team_users);
 });
 
 export default router;

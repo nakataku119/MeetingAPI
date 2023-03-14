@@ -8,6 +8,7 @@ import topicRoutes from "./routes/topics";
 import meetingRoutes from "./routes/meetings";
 // JWTのチェック
 const checkJwt = auth({
+  // .envに書く　環境変数
   audience: "https://meeting-app-back",
   issuerBaseURL: "https://dev-8qn600b6uii32mqx.us.auth0.com",
   tokenSigningAlg: "RS256",
@@ -26,6 +27,7 @@ app.use(
   checkJwt,
   function (req: express.Request, res: express.Response, next: NextFunction) {
     if (req.headers["authorization"]?.split(" ")[1]) {
+      // 例外？
       const decoded: { sub: string } = jwt_decode(
         req.headers["authorization"].split(" ")[1]
       );
@@ -37,10 +39,6 @@ app.use(
 
 app.use("/", usersRoutes, teamsRoutes, topicRoutes, meetingRoutes);
 
-// topへアクセス
-app.get("/", (req: express.Request, res: express.Response) => {
-  res.send("hello");
-});
 app.listen(3333, () => {
   console.log("3000起動");
 });

@@ -81,3 +81,7 @@ router.get("/users/:id/teams", async (req: Request, res: Response) => {
 });
 
 export default router;
+
+// 使わないAPIは作らない　情報漏洩のリスク
+// フロントを作りながら、何が必要か不要か意識する
+// 論理削除と物理削除

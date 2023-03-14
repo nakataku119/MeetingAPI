@@ -4,7 +4,7 @@ import { auth } from "express-oauth2-jwt-bearer";
 import jwt_decode from "jwt-decode";
 import usersRoutes from "./routes/users";
 import teamsRoutes from "./routes/teams";
-import topicRoutes from "./routes/topics";
+import agendaRoutes from "./routes/agendas";
 import meetingRoutes from "./routes/meetings";
 // JWTのチェック
 const checkJwt = auth({
@@ -24,7 +24,7 @@ app.use(cors(options));
 // リクエストボディにユーザーIDを追加する共通処理
 app.use(
   "/*",
-  checkJwt,
+  // checkJwt,
   function (req: express.Request, res: express.Response, next: NextFunction) {
     if (req.headers["authorization"]?.split(" ")[1]) {
       // 例外？
@@ -37,7 +37,7 @@ app.use(
   }
 );
 
-app.use("/", usersRoutes, teamsRoutes, topicRoutes, meetingRoutes);
+app.use("/", usersRoutes, teamsRoutes, agendaRoutes, meetingRoutes);
 
 app.listen(3333, () => {
   console.log("3000起動");

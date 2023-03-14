@@ -7,10 +7,10 @@ const prisma = new PrismaClient();
 // Topicデータの追加
 router.post("/mtgs/:mtg_id/topics", async (req: Request, res: Response) => {
   const mtgId = Number(req.params.mtg_id);
-  const { content } = req.body;
-  const topic = await prisma.topic.create({
+  const { agenda } = req.body;
+  const topic = await prisma.agenda.create({
     data: {
-      content,
+      agenda,
       mtgId,
     },
   });
@@ -19,7 +19,7 @@ router.post("/mtgs/:mtg_id/topics", async (req: Request, res: Response) => {
 // 特定Topicの取得
 router.get("/mtgs/topic/:id", async (req: Request, res: Response) => {
   const id = Number(req.params.id);
-  const topic = await prisma.topic.findUnique({
+  const topic = await prisma.agenda.findUnique({
     where: {
       id,
     },
@@ -29,13 +29,13 @@ router.get("/mtgs/topic/:id", async (req: Request, res: Response) => {
 // Topicデータの更新
 router.put("/mtgs/topic/:id", async (req: Request, res: Response) => {
   const id = Number(req.params.id);
-  const { content } = req.body;
-  const topic = await prisma.topic.update({
+  const { agenda } = req.body;
+  const topic = await prisma.agenda.update({
     where: {
       id,
     },
     data: {
-      content,
+      agenda,
     },
   });
   return res.json(topic);

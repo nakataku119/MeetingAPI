@@ -25,14 +25,14 @@ model Team {
 
 model Mtg {
   id Int     @id @default(autoincrement())
-  schedule DateTime?
+  schedule DateTime
   users User[]
-  topics Topic[]
+  agendas Agenda[]
 }
 
-model Topic {
+model Agenda {
   id Int     @id @default(autoincrement())
-  content String
+  agenda String
   mtg Mtg @relation(fields: [mtgId], references: [id])
   mtgId Int
 }

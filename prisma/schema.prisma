@@ -27,7 +27,7 @@ model Mtg {
   id Int     @id @default(autoincrement())
   schedule DateTime
   users User[]
-  topics Agenda[]
+  agendas Agenda[]
 }
 
 model Agenda {

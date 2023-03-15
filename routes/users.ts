@@ -10,7 +10,7 @@ router.get("/users/me", async (req: Request, res: Response) => {
   const currentUser = await prisma.user.findFirst({
     where: { id: "id1" },
     include: {
-      mtgs: { include: { agendas: true } },
+      mtgs: { include: { agendas: true, users: true } },
       teams: { include: { users: true } },
     },
   });

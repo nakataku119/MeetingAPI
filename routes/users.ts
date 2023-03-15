@@ -6,7 +6,6 @@ const prisma = new PrismaClient();
 
 // ログインユーザーのデータ、所属チーム、参加ミーテイング、関連のメンバーを取得
 router.get("/users/me", async (req: Request, res: Response) => {
-  // const { id } = req.body;
   const currentUser = await prisma.user.findFirst({
     where: { id: "id1" },
     include: {

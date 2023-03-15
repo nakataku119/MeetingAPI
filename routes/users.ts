@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 
 // ログインユーザーのデータ、所属チーム、参加ミーテイング、関連のメンバーを取得
 router.get("/users/me", async (req: Request, res: Response) => {
-  const currentUser = await prisma.user.findFirst({
+  const currentUser = await prisma.user.findUnique({
     where: { id: "id1" },
     include: {
       mtgs: { include: { agendas: true, users: true } },
@@ -15,7 +15,6 @@ router.get("/users/me", async (req: Request, res: Response) => {
   });
   return res.json(currentUser);
 });
-
 // Userデータの追加
 router.post("/users", async (req: Request, res: Response) => {
   const { id, name } = req.body;

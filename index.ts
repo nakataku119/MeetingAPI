@@ -9,14 +9,14 @@ import meetingRoutes from "./routes/meetings";
 // JWTのチェック
 const checkJwt = auth({
   // .envに書く　環境変数
-  audience: "https://meeting-app-back",
-  issuerBaseURL: "https://dev-8qn600b6uii32mqx.us.auth0.com",
+  audience: process.env.AUTH0_AUDIENCE,
+  issuerBaseURL: `https://${process.env.AUTH0_DOMAIN}`,
   tokenSigningAlg: "RS256",
 });
 const app: express.Express = express();
 app.use(express.json());
 // corsの設定
-const allowedOrigins = ["http://localhost:3000"];
+const allowedOrigins = [process.env.CLIENT_ORIGIN_URL!];
 const options: cors.CorsOptions = {
   origin: allowedOrigins,
 };

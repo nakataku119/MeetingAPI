@@ -10,7 +10,7 @@ router.get("/users/me", async (req: Request, res: Response) => {
     where: { id: "id1" },
     include: {
       mtgs: { include: { agendas: true, users: true } },
-      teams: { include: { users: true } },
+      teams: { include: { users: { where: { NOT: { id: "id1" } } } } },
     },
   });
   return res.json(currentUser);

@@ -2,11 +2,11 @@
   "name": "meetingapi",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
-    "dev": "nodemon --exec ts-node index.ts"
+    "dev": "nodemon --exec ts-node server.ts"
   },
   "keywords": [],
   "author": "",

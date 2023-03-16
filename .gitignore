@@ -3,3 +3,7 @@ prisma/migrations/
 
 .env
 test.http
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml

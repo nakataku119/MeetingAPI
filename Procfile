@@ -1,1 +1,1 @@
-web: node server.js -p 3003
+web: node server.js

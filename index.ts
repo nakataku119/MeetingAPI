@@ -39,6 +39,6 @@ app.use(
 
 app.use("/", usersRoutes, teamsRoutes, agendaRoutes, meetingRoutes);
 
-app.listen(3333, () => {
-  console.log("3000起動");
+app.listen(8080, () => {
+  console.log("8080起動");
 });

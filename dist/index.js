@@ -40,7 +40,7 @@ function (req, res, next) {
 });
 app.use("/", users_1.default, teams_1.default, agendas_1.default, meetings_1.default);
 app.get("/", (req, res) => {
-    res.json("demo top response");
+    res.json("demo top response dist");
 });
 app.listen(8080, () => {
     console.log("8080起動");

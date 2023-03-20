@@ -40,7 +40,7 @@ app.use(
 app.use("/", usersRoutes, teamsRoutes, agendaRoutes, meetingRoutes);
 
 app.get("/", (req: Request, res: Response) => {
-  res.json("demo top response");
+  res.json("demo top response dist");
 });
 
 app.listen(8080, () => {

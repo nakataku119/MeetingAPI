@@ -1,4 +1,4 @@
-import express, { NextFunction } from "express";
+import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import { auth } from "express-oauth2-jwt-bearer";
 import jwt_decode from "jwt-decode";
@@ -38,6 +38,10 @@ app.use(
 );
 
 app.use("/", usersRoutes, teamsRoutes, agendaRoutes, meetingRoutes);
+
+app.get("/", (req: Request, res: Response) => {
+  res.json("demo top response");
+});
 
 app.listen(8080, () => {
   console.log("8080起動");

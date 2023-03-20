@@ -13,6 +13,10 @@ const express_1 = require("express");
 const client_1 = require("@prisma/client");
 const router = (0, express_1.Router)();
 const prisma = new client_1.PrismaClient();
+// demo用のレスポンス
+router.get("/users/demo", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    return res.json("/users/demo response");
+}));
 // ログインユーザーのデータ、所属チーム、参加ミーテイング、関連のメンバーを取得
 router.get("/users/me", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const currentUser = yield prisma.user.findUnique({
@@ -41,15 +45,15 @@ router.get("/users", (req, res) => __awaiter(void 0, void 0, void 0, function* (
     return res.json(users);
 }));
 // 特定ユーザーの取得
-router.get("/users/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const id = req.params.id;
-    const user = yield prisma.user.findUnique({
-        where: {
-            id,
-        },
-    });
-    return res.json(user);
-}));
+// router.get("/users/:id", async (req: Request, res: Response) => {
+//   const id = req.params.id;
+//   const user = await prisma.user.findUnique({
+//     where: {
+//       id,
+//     },
+//   });
+//   return res.json(user);
+// });
 // Userデータの更新
 router.put("/users/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id, name } = req.body;

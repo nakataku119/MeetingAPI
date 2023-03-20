@@ -4,6 +4,11 @@ import { PrismaClient } from "@prisma/client";
 const router = Router();
 const prisma = new PrismaClient();
 
+// demo用のレスポンス
+router.get("/users/demo", async (req: Request, res: Response) => {
+  return res.json("/users/demo response");
+});
+
 // ログインユーザーのデータ、所属チーム、参加ミーテイング、関連のメンバーを取得
 router.get("/users/me", async (req: Request, res: Response) => {
   const currentUser = await prisma.user.findUnique({
@@ -32,15 +37,15 @@ router.get("/users", async (req: Request, res: Response) => {
   return res.json(users);
 });
 // 特定ユーザーの取得
-router.get("/users/:id", async (req: Request, res: Response) => {
-  const id = req.params.id;
-  const user = await prisma.user.findUnique({
-    where: {
-      id,
-    },
-  });
-  return res.json(user);
-});
+// router.get("/users/:id", async (req: Request, res: Response) => {
+//   const id = req.params.id;
+//   const user = await prisma.user.findUnique({
+//     where: {
+//       id,
+//     },
+//   });
+//   return res.json(user);
+// });
 // Userデータの更新
 router.put("/users/:id", async (req: Request, res: Response) => {
   const { id, name } = req.body;

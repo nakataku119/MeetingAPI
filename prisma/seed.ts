@@ -3,62 +3,156 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function main() {
-  await prisma.user.upsert({
-    where: { id: "id1" },
-    update: {},
-    create: {
-      id: "id1",
-      name: "user1",
-      teams: {
-        create: [{ name: "team1" }, { name: "team2" }, { name: "team3" }],
-      },
-      mtgs: {
-        create: [
-          {
-            schedule: new Date(2022, 1, 12, 12, 11, 11),
-            agendas: {
-              create: [
-                { agenda: "agenda1" },
-                { agenda: "agenda2" },
-                { agenda: "agenda3" },
-              ],
-            },
-          },
-          {
-            schedule: new Date(2023, 11, 11, 11, 11, 11),
-            agendas: {
-              create: [
-                { agenda: "agenda1" },
-                { agenda: "agenda2" },
-                { agenda: "agenda3" },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  });
+  const users = [
+    { id: "1", name: "山田　太郎" },
+    { id: "2", name: "鈴木　一郎" },
+    { id: "3", name: "佐藤　二郎" },
+    { id: "4", name: "田中　三郎" },
+    { id: "5", name: "鈴木　二郎" },
+    { id: "guest", name: "ゲストユーザー" },
+  ];
+  for (const user of users) {
+    await prisma.user.create({ data: user });
+  }
+
+  const teams = [
+    { name: "チームA" },
+    { name: "チームB" },
+    { name: "チームC" },
+    { name: "チームD" },
+    { name: "チームE" },
+  ];
+  for (const team of teams) {
+    await prisma.team.create({ data: team });
+  }
 
   await prisma.team.upsert({
     where: { id: 1 },
     update: {
       users: {
-        create: [
-          { id: "123", name: "user123" },
-          { id: "124", name: "user124" },
-          { id: "125", name: "user125" },
+        connect: [
+          { id: "guest" },
+          { id: "1" },
+          { id: "2" },
+          { id: "3" },
+          { id: "4" },
+          { id: "5" },
         ],
       },
     },
-    create: { name: "team1" },
+    create: { name: "チームA" },
+  });
+
+  await prisma.team.upsert({
+    where: { id: 2 },
+    update: {
+      users: {
+        connect: [{ id: "guest" }, { id: "1" }, { id: "2" }],
+      },
+    },
+    create: { name: "チームB" },
+  });
+
+  await prisma.team.upsert({
+    where: { id: 3 },
+    update: {
+      users: {
+        connect: [{ id: "guest" }, { id: "1" }, { id: "2" }, { id: "5" }],
+      },
+    },
+    create: { name: "チームC" },
+  });
+
+  await prisma.team.upsert({
+    where: { id: 4 },
+    update: {
+      users: {
+        connect: [{ id: "guest" }],
+      },
+    },
+    create: { name: "チームD" },
   });
 
   await prisma.mtg.upsert({
     where: { id: 1 },
-    update: {
-      users: { connect: [{ id: "123" }, { id: "124" }, { id: "125" }] },
+    update: {},
+    create: {
+      schedule: new Date(2021, 10, 10, 10, 0),
+      team: { connect: { id: 1 } },
+      users: {
+        connect: [
+          { id: "guest" },
+          { id: "1" },
+          { id: "2" },
+          { id: "3" },
+          { id: "4" },
+          { id: "5" },
+        ],
+      },
+      agendas: {
+        create: [
+          { agenda: "業務に関して" },
+          { agenda: "プライベート" },
+          { agenda: "今後のキャリア" },
+        ],
+      },
     },
-    create: { schedule: new Date(2023, 11, 11, 11, 11, 11) },
+  });
+
+  await prisma.mtg.upsert({
+    where: { id: 2 },
+    update: {},
+    create: {
+      schedule: new Date(2021, 5, 10, 10, 0),
+      team: { connect: { id: 1 } },
+      users: {
+        connect: [{ id: "guest" }, { id: "1" }, { id: "3" }],
+      },
+      agendas: {
+        create: [{ agenda: "業務に関して" }, { agenda: "プライベート" }],
+      },
+    },
+  });
+
+  await prisma.mtg.upsert({
+    where: { id: 3 },
+    update: {},
+    create: {
+      schedule: new Date(2023, 10, 10, 10, 0),
+      team: { connect: { id: 1 } },
+      users: {
+        connect: [
+          { id: "guest" },
+          { id: "1" },
+          { id: "2" },
+          { id: "3" },
+          { id: "4" },
+          { id: "5" },
+        ],
+      },
+      agendas: {
+        create: [{ agenda: "プライベート" }, { agenda: "今後のキャリア" }],
+      },
+    },
+  });
+
+  await prisma.mtg.upsert({
+    where: { id: 1 },
+    update: {},
+    create: {
+      schedule: new Date(2023, 3, 10, 10, 0),
+      team: { connect: { id: 1 } },
+      users: {
+        connect: [{ id: "guest" }, { id: "1" }, { id: "3" }, { id: "4" }],
+      },
+      agendas: {
+        create: [
+          { agenda: "業務に関して" },
+          { agenda: "プライベート" },
+          { agenda: "今後のキャリア" },
+        ],
+      },
+    },
   });
 }
 

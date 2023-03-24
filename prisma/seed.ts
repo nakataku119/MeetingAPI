@@ -137,7 +137,7 @@ async function main() {
   });
 
   await prisma.mtg.upsert({
-    where: { id: 1 },
+    where: { id: 4 },
     update: {},
     create: {
       schedule: new Date(2023, 3, 10, 10, 0),

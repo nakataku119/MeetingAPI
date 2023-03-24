@@ -4,9 +4,16 @@ import { PrismaClient } from "@prisma/client";
 const router = Router();
 const prisma = new PrismaClient();
 
-// demo用のレスポンス
-router.get("/users/demo", async (req: Request, res: Response) => {
-  return res.json("/users/demo response");
+// ゲストユーザーデモ用
+router.get("/users/guest", async (req: Request, res: Response) => {
+  const guestUser = await prisma.user.findUnique({
+    where: { id: "guest" },
+    include: {
+      mtgs: { include: { agendas: true, users: true, team: true } },
+      teams: { include: { users: { where: { NOT: { id: "guest" } } } } },
+    },
+  });
+  return res.json(guestUser);
 });
 
 // ログインユーザーのデータ、所属チーム、参加ミーテイング、関連のメンバーを取得

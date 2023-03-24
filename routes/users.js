@@ -13,9 +13,16 @@ const express_1 = require("express");
 const client_1 = require("@prisma/client");
 const router = (0, express_1.Router)();
 const prisma = new client_1.PrismaClient();
-// demo用のレスポンス
-router.get("/users/demo", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    return res.json("/users/demo response");
+// ゲストユーザーデモ用
+router.get("/users/guest", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const guestUser = yield prisma.user.findUnique({
+        where: { id: "guest" },
+        include: {
+            mtgs: { include: { agendas: true, users: true, team: true } },
+            teams: { include: { users: { where: { NOT: { id: "guest" } } } } },
+        },
+    });
+    return res.json(guestUser);
 }));
 // ログインユーザーのデータ、所属チーム、参加ミーテイング、関連のメンバーを取得
 router.get("/users/me", (req, res) => __awaiter(void 0, void 0, void 0, function* () {

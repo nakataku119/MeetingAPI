@@ -15,7 +15,7 @@ const router = (0, express_1.Router)();
 const prisma = new client_1.PrismaClient();
 // 新規ミーティング作成、同時にユーザーも追加、トピックも作成
 router.post("/mtgs", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { schedule, users, agendas } = req.body;
+    const { schedule, users, agendas, team } = req.body;
     const mtg = yield prisma.mtg.create({
         data: {
             schedule: schedule,
@@ -25,6 +25,7 @@ router.post("/mtgs", (req, res) => __awaiter(void 0, void 0, void 0, function* (
             agendas: {
                 create: agendas,
             },
+            teamId: team,
         },
     });
     return res.json(mtg);

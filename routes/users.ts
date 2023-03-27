@@ -18,11 +18,12 @@ router.get("/users/guest", async (req: Request, res: Response) => {
 
 // ログインユーザーのデータ、所属チーム、参加ミーテイング、関連のメンバーを取得
 router.get("/users/me", async (req: Request, res: Response) => {
+  console.log(req.body.id);
   const currentUser = await prisma.user.findUnique({
-    where: { id: "id1" },
+    where: { id: req.body.id },
     include: {
       mtgs: { include: { agendas: true, users: true } },
-      teams: { include: { users: { where: { NOT: { id: "id1" } } } } },
+      teams: { include: { users: { where: { NOT: { id: req.body.id } } } } },
     },
   });
   return res.json(currentUser);

@@ -30,6 +30,48 @@ router.post("/mtgs", (req, res) => __awaiter(void 0, void 0, void 0, function* (
     });
     return res.json(mtg);
 }));
+// ミーティングの更新、同時に参加者も更新
+router.put("/mtgs/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log("put");
+    const id = Number(req.params.id);
+    const { schedule, users, agendas, team } = req.body;
+    const mtg = yield prisma.mtg.update({
+        where: {
+            id,
+        },
+        data: {
+            schedule: schedule,
+            users: {
+                set: users,
+            },
+            agendas: {
+                create: agendas,
+            },
+            team: {
+                connect: {
+                    id: team,
+                },
+            },
+        },
+        include: {
+            team: true,
+            users: true,
+            agendas: true,
+        },
+    });
+    return res.json(mtg);
+}));
+// 複数ミーティングの削除
+router.delete("/agendas", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { agendas } = req.body;
+    const mtgs = yield prisma.agenda.deleteMany({
+        where: {
+            id: {
+                in: agendas,
+            },
+        },
+    });
+}));
 // 全ミーティングの呼び出し
 router.get("/mtgs", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const mtgs = yield prisma.mtg.findMany();
@@ -70,27 +112,6 @@ router.get("/mtgs/:id/users", (req, res) => __awaiter(void 0, void 0, void 0, fu
         },
     });
     return res.json(mtg_topics);
-}));
-// ミーティングの更新、同時に参加者も更新
-// 個別に招待するか検討
-router.put("/mtgs/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const id = Number(req.params.id);
-    const { schedule, userId } = req.body;
-    const mtg = yield prisma.mtg.update({
-        where: {
-            id,
-        },
-        data: {
-            schedule,
-            users: {
-                // 既存メンバーがリセットされる
-                set: [{ id: userId }],
-                // 既存メンバーに追加する
-                // connect: [{ id: userId }]
-            },
-        },
-    });
-    return res.json(mtg);
 }));
 // Meetingデータの削除
 router.delete("/mtgs/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {

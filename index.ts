@@ -16,7 +16,10 @@ const checkJwt = auth({
 const app: express.Express = express();
 app.use(express.json());
 // corsの設定
-const allowedOrigins = [process.env.CLIENT_ORIGIN_URL!];
+const allowedOrigins = [
+  process.env.CLIENT_ORIGIN_URL!,
+  process.env.CLIENT_ORIGIN_LOCAL_URL!,
+];
 const options: cors.CorsOptions = {
   origin: allowedOrigins,
 };

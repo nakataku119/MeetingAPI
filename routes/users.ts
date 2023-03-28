@@ -9,7 +9,13 @@ router.get("/users/guest", async (req: Request, res: Response) => {
   const guestUser = await prisma.user.findUnique({
     where: { id: "guest" },
     include: {
-      mtgs: { include: { agendas: true, users: true, team: true } },
+      mtgs: {
+        include: {
+          agendas: true,
+          users: true,
+          team: { include: { users: { where: { NOT: { id: "guest" } } } } },
+        },
+      },
       teams: { include: { users: { where: { NOT: { id: "guest" } } } } },
     },
   });

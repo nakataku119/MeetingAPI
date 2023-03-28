@@ -27,7 +27,7 @@ router.post("/mtgs", async (req: Request, res: Response) => {
 router.put("/mtgs/:id", async (req: Request, res: Response) => {
   console.log("put");
   const id = Number(req.params.id);
-  const { schedule, users, agendas, team } = req.body;
+  const { schedule, users, agendas, teamId } = req.body.data;
   const mtg = await prisma.mtg.update({
     where: {
       id,
@@ -42,7 +42,7 @@ router.put("/mtgs/:id", async (req: Request, res: Response) => {
       },
       team: {
         connect: {
-          id: team,
+          id: teamId,
         },
       },
     },

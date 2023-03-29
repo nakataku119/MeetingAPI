@@ -19,7 +19,11 @@ router.post("/teams", async (req: Request, res: Response) => {
 });
 // 全チームの呼び出し
 router.get("/teams", async (req: Request, res: Response) => {
-  const teams = await prisma.team.findMany();
+  const teams = await prisma.team.findMany({
+    include: {
+      users: true,
+    },
+  });
   return res.json(teams);
 });
 // あるチームの呼び出し
@@ -48,19 +52,18 @@ router.get("/teams/:id/users", async (req: Request, res: Response) => {
 // チームの更新、同時に所属するユーザーも更新
 router.put("/teams/:id", async (req: Request, res: Response) => {
   const id = Number(req.params.id);
-  const { name, userId } = req.body;
+  const { members } = req.body;
   const team = await prisma.team.update({
     where: {
       id,
     },
     data: {
-      name,
       users: {
-        // 既存メンバーがリセットされる
-        set: [{ id: userId }],
-        // 既存メンバーに追加する
-        // connect: [{ id: userId }]
+        set: members,
       },
+    },
+    include: {
+      users: true,
     },
   });
   return res.json(team);

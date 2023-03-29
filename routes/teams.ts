@@ -26,33 +26,10 @@ router.get("/teams", async (req: Request, res: Response) => {
   });
   return res.json(teams);
 });
-// あるチームの呼び出し
-router.get("/teams/:id", async (req: Request, res: Response) => {
-  const id = Number(req.params.id);
-  const team = await prisma.team.findUnique({
-    where: {
-      id,
-    },
-  });
-  return res.json(team);
-});
-// 関連するユーザーの呼び出し
-router.get("/teams/:id/users", async (req: Request, res: Response) => {
-  const id = Number(req.params.id);
-  const team_users = await prisma.team.findUnique({
-    where: {
-      id,
-    },
-    include: {
-      users: true,
-    },
-  });
-  return res.json(team_users);
-});
 // チームの更新、同時に所属するユーザーも更新
 router.put("/teams/:id", async (req: Request, res: Response) => {
   const id = Number(req.params.id);
-  const { members } = req.body;
+  const { members } = req.body.data;
   const team = await prisma.team.update({
     where: {
       id,

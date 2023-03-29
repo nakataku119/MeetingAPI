@@ -29,12 +29,13 @@ router.get("/teams", async (req: Request, res: Response) => {
 // チームの更新、同時に所属するユーザーも更新
 router.put("/teams/:id", async (req: Request, res: Response) => {
   const id = Number(req.params.id);
-  const { members } = req.body.data;
+  const { members, name } = req.body.data;
   const team = await prisma.team.update({
     where: {
       id,
     },
     data: {
+      name: name,
       users: {
         set: members,
       },

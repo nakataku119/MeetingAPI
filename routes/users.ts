@@ -61,7 +61,7 @@ router.get("/users", async (req: Request, res: Response) => {
 //   return res.json(user);
 // });
 // Userデータの更新
-router.put("/users/:id", async (req: Request, res: Response) => {
+router.put("/users", async (req: Request, res: Response) => {
   const { id, name } = req.body;
   const user = await prisma.user.update({
     where: {

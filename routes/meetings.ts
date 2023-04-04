@@ -64,6 +64,7 @@ router.delete("/agendas", async (req: Request, res: Response) => {
       },
     },
   });
+  return res.json(mtgs);
 });
 
 // 全ミーティングの呼び出し

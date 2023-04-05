@@ -9,7 +9,7 @@ async function main() {
     { id: "3", name: "佐藤　二郎" },
     { id: "4", name: "田中　三郎" },
     { id: "5", name: "鈴木　二郎" },
-    { id: "guest", name: "ゲストユーザー" },
+    { id: "auth0|642d3a823595d0580ee2f804", name: "admin ユーザー" },
   ];
   for (const user of users) {
     await prisma.user.create({ data: user });
@@ -31,7 +31,7 @@ async function main() {
     update: {
       users: {
         connect: [
-          { id: "guest" },
+          { id: "auth0|642d3a823595d0580ee2f804" },
           { id: "1" },
           { id: "2" },
           { id: "3" },
@@ -47,7 +47,11 @@ async function main() {
     where: { id: 2 },
     update: {
       users: {
-        connect: [{ id: "guest" }, { id: "1" }, { id: "2" }],
+        connect: [
+          { id: "auth0|642d3a823595d0580ee2f804" },
+          { id: "1" },
+          { id: "2" },
+        ],
       },
     },
     create: { name: "チームB" },
@@ -57,7 +61,12 @@ async function main() {
     where: { id: 3 },
     update: {
       users: {
-        connect: [{ id: "guest" }, { id: "1" }, { id: "2" }, { id: "5" }],
+        connect: [
+          { id: "auth0|642d3a823595d0580ee2f804" },
+          { id: "1" },
+          { id: "2" },
+          { id: "5" },
+        ],
       },
     },
     create: { name: "チームC" },
@@ -67,7 +76,7 @@ async function main() {
     where: { id: 4 },
     update: {
       users: {
-        connect: [{ id: "guest" }],
+        connect: [{ id: "auth0|642d3a823595d0580ee2f804" }],
       },
     },
     create: { name: "チームD" },
@@ -81,7 +90,7 @@ async function main() {
       team: { connect: { id: 1 } },
       users: {
         connect: [
-          { id: "guest" },
+          { id: "auth0|642d3a823595d0580ee2f804" },
           { id: "1" },
           { id: "2" },
           { id: "3" },
@@ -106,7 +115,11 @@ async function main() {
       schedule: new Date(2021, 5, 10, 10, 0),
       team: { connect: { id: 1 } },
       users: {
-        connect: [{ id: "guest" }, { id: "1" }, { id: "3" }],
+        connect: [
+          { id: "auth0|642d3a823595d0580ee2f804" },
+          { id: "1" },
+          { id: "3" },
+        ],
       },
       agendas: {
         create: [{ agenda: "業務に関して" }, { agenda: "プライベート" }],
@@ -122,7 +135,7 @@ async function main() {
       team: { connect: { id: 1 } },
       users: {
         connect: [
-          { id: "guest" },
+          { id: "auth0|642d3a823595d0580ee2f804" },
           { id: "1" },
           { id: "2" },
           { id: "3" },
@@ -143,7 +156,12 @@ async function main() {
       schedule: new Date(2023, 3, 10, 10, 0),
       team: { connect: { id: 1 } },
       users: {
-        connect: [{ id: "guest" }, { id: "1" }, { id: "3" }, { id: "4" }],
+        connect: [
+          { id: "auth0|642d3a823595d0580ee2f804" },
+          { id: "1" },
+          { id: "3" },
+          { id: "4" },
+        ],
       },
       agendas: {
         create: [

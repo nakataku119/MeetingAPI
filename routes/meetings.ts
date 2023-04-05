@@ -6,10 +6,11 @@ const prisma = new PrismaClient();
 
 // 新規ミーティング作成、同時にユーザーも追加、トピックも作成
 router.post("/mtgs", async (req: Request, res: Response) => {
-  const { schedule, teamId, users, agendas } = req.body.data;
+  const { schedule, teamId, users, agendas, freeAgenda } = req.body.data;
   const mtg = await prisma.mtg.create({
     data: {
       schedule: schedule,
+      freeAgenda: freeAgenda,
       users: {
         connect: users,
       },
@@ -27,13 +28,14 @@ router.post("/mtgs", async (req: Request, res: Response) => {
 router.put("/mtgs/:id", async (req: Request, res: Response) => {
   console.log("put");
   const id = Number(req.params.id);
-  const { schedule, users, agendas, teamId } = req.body.data;
+  const { schedule, users, agendas, teamId, freeAgenda } = req.body.data;
   const mtg = await prisma.mtg.update({
     where: {
       id,
     },
     data: {
       schedule: schedule,
+      freeAgenda: freeAgenda,
       users: {
         set: users,
       },

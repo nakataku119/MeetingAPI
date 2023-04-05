@@ -25,13 +25,12 @@ const options: cors.CorsOptions = {
   origin: allowedOrigins,
 };
 app.use(cors(options));
-// リクエストボディにユーザーIDを追加する共通処理
+
 app.use(
   "/*",
-  // checkJwt,
+  checkJwt,
   function (req: express.Request, res: express.Response, next: NextFunction) {
     if (req.headers["authorization"]?.split(" ")[1]) {
-      // 例外？
       const decoded: { sub: string } = jwt_decode(
         req.headers["authorization"].split(" ")[1]
       );
@@ -44,7 +43,7 @@ app.use(
 app.use("/", usersRoutes, teamsRoutes, agendaRoutes, meetingRoutes);
 
 app.get("/", (req: Request, res: Response) => {
-  res.json("demo top response not dist");
+  res.json("top response");
 });
 
 app.listen(8080, () => {

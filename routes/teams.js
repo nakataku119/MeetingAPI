@@ -13,7 +13,6 @@ const express_1 = require("express");
 const client_1 = require("@prisma/client");
 const router = (0, express_1.Router)();
 const prisma = new client_1.PrismaClient();
-// 新規チーム作成、同時にユーザーも追加
 router.post("/teams", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, members } = req.body.data;
     const team = yield prisma.team.create({
@@ -26,7 +25,6 @@ router.post("/teams", (req, res) => __awaiter(void 0, void 0, void 0, function* 
     });
     return res.json(team);
 }));
-// 全チームの呼び出し
 router.get("/teams", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const teams = yield prisma.team.findMany({
         include: {
@@ -35,7 +33,6 @@ router.get("/teams", (req, res) => __awaiter(void 0, void 0, void 0, function* (
     });
     return res.json(teams);
 }));
-// チームの更新、同時に所属するユーザーも更新
 router.put("/teams/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = Number(req.params.id);
     const { members, name } = req.body.data;
@@ -55,7 +52,6 @@ router.put("/teams/:id", (req, res) => __awaiter(void 0, void 0, void 0, functio
     });
     return res.json(team);
 }));
-// チームの削除
 router.delete("/teams/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = Number(req.params.id);
     const team = yield prisma.team.delete({

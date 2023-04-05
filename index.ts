@@ -6,21 +6,26 @@ import usersRoutes from "./routes/users";
 import teamsRoutes from "./routes/teams";
 import agendaRoutes from "./routes/agendas";
 import meetingRoutes from "./routes/meetings";
-// JWTのチェック
+
+const app: express.Express = express();
+app.use(express.json());
+
+app.get("/", (req: Request, res: Response) => {
+  res.json("top response");
+});
+
 const checkJwt = auth({
-  // .envに書く　環境変数
   audience: process.env.AUTH0_AUDIENCE,
   issuerBaseURL: `https://${process.env.AUTH0_DOMAIN}`,
   tokenSigningAlg: "RS256",
 });
-const app: express.Express = express();
-app.use(express.json());
-// corsの設定
+
 const allowedOrigins = [
   process.env.CLIENT_ORIGIN_URL!,
   process.env.CLIENT_ORIGIN_LOCAL_URL!,
   process.env.CLIENT_ORIGIN_DEV_URL!,
 ];
+
 const options: cors.CorsOptions = {
   origin: allowedOrigins,
 };
@@ -41,10 +46,6 @@ app.use(
 );
 
 app.use("/", usersRoutes, teamsRoutes, agendaRoutes, meetingRoutes);
-
-app.get("/", (req: Request, res: Response) => {
-  res.json("top response");
-});
 
 app.listen(8080, () => {
   console.log("8080起動");

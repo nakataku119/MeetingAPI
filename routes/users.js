@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const client_1 = require("@prisma/client");
+const cache_1 = require("../cache");
 const router = (0, express_1.Router)();
 const prisma = new client_1.PrismaClient();
 router.get("/users/me", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -21,9 +22,12 @@ router.get("/users/me", (req, res) => __awaiter(void 0, void 0, void 0, function
             teams: { include: { users: { where: { NOT: { id: req.body.id } } } } },
         },
     });
+    (0, cache_1.saveUserToCache)(currentUser);
     return res.json(currentUser);
 }));
 router.get("/users", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log((0, cache_1.getUserFromCache)());
+    console.log("test");
     const users = yield prisma.user.findMany();
     return res.json(users);
 }));

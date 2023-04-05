@@ -12,7 +12,7 @@ datasource db {
 
 model User {
   id    String     @id
-  name String
+  name String @default("")
   admin Boolean @default(false)
   teams Team[]
   mtgs Mtg[]
@@ -20,7 +20,7 @@ model User {
 
 model Team {
   id Int     @id @default(autoincrement())
-  name String
+  name String @default("")
   users User[]
   mtgs Mtg[]
 }
@@ -30,6 +30,7 @@ model Mtg {
   schedule DateTime
   users User[]
   agendas Agenda[]
+  freeAgenda String?
   team Team @relation(fields: [teamId], references: [id])
   teamId Int
 }

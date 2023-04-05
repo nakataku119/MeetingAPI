@@ -38,6 +38,6 @@ model Mtg {
 model Agenda {
   id Int     @id @default(autoincrement())
   agenda String
-  mtg Mtg @relation(fields: [mtgId], references: [id])
+  mtg Mtg @relation(fields: [mtgId], references: [id], onDelete: Cascade)
   mtgId Int
 }

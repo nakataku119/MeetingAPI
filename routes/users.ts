@@ -19,10 +19,10 @@ router.get("/users/me", async (req: Request, res: Response) => {
 });
 
 router.post("/users", async (req: Request, res: Response) => {
-  const { id, name } = req.body;
+  const { name } = req.body;
   const user = await prisma.user.create({
     data: {
-      id: id,
+      id: getUserIdFromCache(),
       name: name,
     },
   });
@@ -30,13 +30,13 @@ router.post("/users", async (req: Request, res: Response) => {
 });
 
 router.put("/users", async (req: Request, res: Response) => {
-  const { id, name } = req.body;
+  const { name } = req.body;
   if (!name) {
     return;
   }
   const user = await prisma.user.update({
     where: {
-      id,
+      id: getUserIdFromCache(),
     },
     data: {
       name,

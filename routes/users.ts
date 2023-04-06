@@ -1,19 +1,20 @@
 import { Router, Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
-// import { saveUserToCache, getUserFromCache } from "../cache";
+import { getUserIdFromCache } from "../utils/userId";
 
 const router = Router();
 const prisma = new PrismaClient();
 
 router.get("/users/me", async (req: Request, res: Response) => {
   const currentUser = await prisma.user.findUnique({
-    where: { id: req.body.id },
+    where: { id: getUserIdFromCache() },
     include: {
       mtgs: { include: { agendas: true, users: true } },
-      teams: { include: { users: { where: { NOT: { id: req.body.id } } } } },
+      teams: {
+        include: { users: { where: { NOT: { id: getUserIdFromCache() } } } },
+      },
     },
   });
-  // saveUserToCache(currentUser);
   return res.json(currentUser);
 });
 

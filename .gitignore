@@ -1,6 +1,9 @@
+.gitignore
 node_modules/
 prisma/migrations/
 
+
+utils/errorHandler.ts
 .env
 test.http
 # Elastic Beanstalk Files

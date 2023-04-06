@@ -1,4 +1,4 @@
-import express, { NextFunction, Request, Response } from "express";
+import express, { Express, NextFunction, Request, Response } from "express";
 import cors from "cors";
 import { auth } from "express-oauth2-jwt-bearer";
 import jwt_decode from "jwt-decode";
@@ -6,8 +6,11 @@ import usersRoutes from "./routes/users";
 import teamsRoutes from "./routes/teams";
 import agendaRoutes from "./routes/agendas";
 import meetingRoutes from "./routes/meetings";
+import adminRoutes from "./routes/admin";
+import { setUserIdToCache, getUserIdFromCache } from "./utils/userId";
 
-const app: express.Express = express();
+const app: Express = express();
+
 app.use(express.json());
 
 app.get("/", (req: Request, res: Response) => {
@@ -31,21 +34,16 @@ const options: cors.CorsOptions = {
 };
 app.use(cors(options));
 
-app.use(
-  "/*",
-  checkJwt,
-  function (req: express.Request, res: express.Response, next: NextFunction) {
-    if (req.headers["authorization"]?.split(" ")[1]) {
-      const decoded: { sub: string } = jwt_decode(
-        req.headers["authorization"].split(" ")[1]
-      );
-      req.body.id = decoded.sub;
-    }
-    next();
-  }
-);
+app.use("/*", checkJwt, setUserIdToCache);
 
-app.use("/", usersRoutes, teamsRoutes, agendaRoutes, meetingRoutes);
+app.use(
+  "/",
+  usersRoutes,
+  teamsRoutes,
+  agendaRoutes,
+  meetingRoutes,
+  adminRoutes
+);
 
 app.listen(8080, () => {
   console.log("8080起動");

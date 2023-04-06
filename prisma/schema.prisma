@@ -16,6 +16,7 @@ model User {
   admin Boolean @default(false)
   teams Team[]
   mtgs Mtg[]
+  deleted Boolean @default(false) @map("is_deleted")
 }
 
 model Team {
@@ -23,6 +24,7 @@ model Team {
   name String @default("")
   users User[]
   mtgs Mtg[]
+  deleted Boolean @default(false) @map("is_deleted")
 }
 
 model Mtg {

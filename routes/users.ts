@@ -9,9 +9,16 @@ router.get("/users/me", async (req: Request, res: Response) => {
   const currentUser = await prisma.user.findUnique({
     where: { id: getUserIdFromCache() },
     include: {
-      mtgs: { include: { agendas: true, users: true } },
+      mtgs: {
+        include: { agendas: true, users: { where: { deleted: false } } },
+      },
       teams: {
-        include: { users: { where: { NOT: { id: getUserIdFromCache() } } } },
+        where: { deleted: false },
+        include: {
+          users: {
+            where: { NOT: { id: getUserIdFromCache() }, deleted: false },
+          },
+        },
       },
     },
   });

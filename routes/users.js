@@ -18,9 +18,16 @@ router.get("/users/me", (req, res) => __awaiter(void 0, void 0, void 0, function
     const currentUser = yield prisma.user.findUnique({
         where: { id: (0, userId_1.getUserIdFromCache)() },
         include: {
-            mtgs: { include: { agendas: true, users: true } },
+            mtgs: {
+                include: { agendas: true, users: { where: { deleted: false } } },
+            },
             teams: {
-                include: { users: { where: { NOT: { id: (0, userId_1.getUserIdFromCache)() } } } },
+                where: { deleted: false },
+                include: {
+                    users: {
+                        where: { NOT: { id: (0, userId_1.getUserIdFromCache)() }, deleted: false },
+                    },
+                },
             },
         },
     });

@@ -17,14 +17,17 @@ const router = (0, express_1.Router)();
 const prisma = new client_1.PrismaClient();
 router.use(currentUser_1.setUserToCache, authAdmin_1.authAdmin);
 router.get("/admin/users", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const users = yield prisma.user.findMany();
+    const users = yield prisma.user.findMany({ where: { deleted: false } });
     return res.json(users);
 }));
 router.delete("/admin/users/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
-    const user = yield prisma.user.delete({
+    const user = yield prisma.user.update({
         where: {
             id,
+        },
+        data: {
+            deleted: true,
         },
     });
     return res.json(user);
@@ -43,6 +46,7 @@ router.post("/admin/teams", (req, res) => __awaiter(void 0, void 0, void 0, func
 }));
 router.get("/admin/teams", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const teams = yield prisma.team.findMany({
+        where: { deleted: false },
         include: {
             users: true,
         },
@@ -70,10 +74,11 @@ router.put("/admin/teams/:id", (req, res) => __awaiter(void 0, void 0, void 0, f
 }));
 router.delete("/admin/teams/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = Number(req.params.id);
-    const team = yield prisma.team.delete({
+    const team = yield prisma.team.update({
         where: {
             id,
         },
+        data: { deleted: true },
     });
     return res.json(team);
 }));

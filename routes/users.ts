@@ -13,6 +13,7 @@ router.get("/users/me", async (req: Request, res: Response) => {
         include: { agendas: true, users: { where: { deleted: false } } },
       },
       teams: {
+        where: { deleted: false },
         include: {
           users: {
             where: { NOT: { id: getUserIdFromCache() }, deleted: false },

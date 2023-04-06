@@ -9,15 +9,18 @@ const prisma = new PrismaClient();
 router.use(setUserToCache, authAdmin);
 
 router.get("/admin/users", async (req: Request, res: Response) => {
-  const users = await prisma.user.findMany();
+  const users = await prisma.user.findMany({ where: { deleted: false } });
   return res.json(users);
 });
 
 router.delete("/admin/users/:id", async (req: Request, res: Response) => {
   const id = req.params.id;
-  const user = await prisma.user.delete({
+  const user = await prisma.user.update({
     where: {
       id,
+    },
+    data: {
+      deleted: true,
     },
   });
   return res.json(user);
@@ -38,6 +41,7 @@ router.post("/admin/teams", async (req: Request, res: Response) => {
 
 router.get("/admin/teams", async (req: Request, res: Response) => {
   const teams = await prisma.team.findMany({
+    where: { deleted: false },
     include: {
       users: true,
     },
@@ -67,10 +71,11 @@ router.put("/admin/teams/:id", async (req: Request, res: Response) => {
 
 router.delete("/admin/teams/:id", async (req: Request, res: Response) => {
   const id = Number(req.params.id);
-  const team = await prisma.team.delete({
+  const team = await prisma.team.update({
     where: {
       id,
     },
+    data: { deleted: true },
   });
   return res.json(team);
 });

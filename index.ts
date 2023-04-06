@@ -7,6 +7,7 @@ import adminRoutes from "./routes/admin";
 import { setUserIdToCache } from "./utils/userId";
 import { checkJwt } from "./utils/auth";
 import cors from "./utils/cors";
+import { deleteCache } from "./utils/cache";
 
 const app: Express = express();
 
@@ -17,6 +18,12 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use("/*", cors, checkJwt, setUserIdToCache);
+
+app.post("/logout", (req: Request, res: Response) => {
+  console.log("logout");
+  deleteCache();
+  res.json("キャッシュを削除しました。");
+});
 
 app.use(
   "/",

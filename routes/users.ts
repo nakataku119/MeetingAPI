@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
-import { saveUserToCache, getUserFromCache } from "../cache";
+// import { saveUserToCache, getUserFromCache } from "../cache";
 
 const router = Router();
 const prisma = new PrismaClient();
@@ -13,15 +13,8 @@ router.get("/users/me", async (req: Request, res: Response) => {
       teams: { include: { users: { where: { NOT: { id: req.body.id } } } } },
     },
   });
-  saveUserToCache(currentUser);
+  // saveUserToCache(currentUser);
   return res.json(currentUser);
-});
-
-router.get("/users", async (req: Request, res: Response) => {
-  console.log(getUserFromCache());
-  console.log("test");
-  const users = await prisma.user.findMany();
-  return res.json(users);
 });
 
 router.post("/users", async (req: Request, res: Response) => {
@@ -46,16 +39,6 @@ router.put("/users", async (req: Request, res: Response) => {
     },
     data: {
       name,
-    },
-  });
-  return res.json(user);
-});
-
-router.delete("/users/:id", async (req: Request, res: Response) => {
-  const id = req.params.id;
-  const user = await prisma.user.delete({
-    where: {
-      id,
     },
   });
   return res.json(user);

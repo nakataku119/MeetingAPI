@@ -25,7 +25,6 @@ router.post("/mtgs", async (req: Request, res: Response) => {
 });
 
 router.put("/mtgs/:id", async (req: Request, res: Response) => {
-  console.log("put");
   const id = Number(req.params.id);
   const { schedule, users, agendas, teamId, freeAgenda } = req.body.data;
   const mtg = await prisma.mtg.update({
@@ -54,11 +53,6 @@ router.put("/mtgs/:id", async (req: Request, res: Response) => {
     },
   });
   return res.json(mtg);
-});
-
-router.get("/mtgs", async (req: Request, res: Response) => {
-  const mtgs = await prisma.mtg.findMany();
-  return res.json(mtgs);
 });
 
 router.delete("/mtgs/:id", async (req: Request, res: Response) => {

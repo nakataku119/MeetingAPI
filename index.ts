@@ -6,6 +6,7 @@ import usersRoutes from "./routes/users";
 import teamsRoutes from "./routes/teams";
 import agendaRoutes from "./routes/agendas";
 import meetingRoutes from "./routes/meetings";
+import adminRoutes from "./routes/admin";
 
 const app: express.Express = express();
 app.use(express.json());
@@ -33,7 +34,7 @@ app.use(cors(options));
 
 app.use(
   "/*",
-  checkJwt,
+  // checkJwt,
   function (req: express.Request, res: express.Response, next: NextFunction) {
     if (req.headers["authorization"]?.split(" ")[1]) {
       const decoded: { sub: string } = jwt_decode(
@@ -45,7 +46,14 @@ app.use(
   }
 );
 
-app.use("/", usersRoutes, teamsRoutes, agendaRoutes, meetingRoutes);
+app.use(
+  "/",
+  usersRoutes,
+  teamsRoutes,
+  agendaRoutes,
+  meetingRoutes,
+  adminRoutes
+);
 
 app.listen(8080, () => {
   console.log("8080起動");

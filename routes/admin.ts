@@ -1,13 +1,14 @@
 import { Router, Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
-// import { saveUserToCache, getUserFromCache } from "../cache";
+import { setUserToCache, getUserFromCache } from "../utils/currentUser";
+import { authAdmin } from "../utils/authAdmin";
 
 const router = Router();
 const prisma = new PrismaClient();
 
+router.use(setUserToCache, authAdmin);
+
 router.get("/admin/users", async (req: Request, res: Response) => {
-  // console.log(getUserFromCache());
-  console.log("admin/users");
   const users = await prisma.user.findMany();
   return res.json(users);
 });

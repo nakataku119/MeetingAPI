@@ -9,21 +9,31 @@ const prisma = new PrismaClient();
 router.use(setUserToCache, authAdmin);
 
 router.get("/admin/users", async (req: Request, res: Response) => {
-  const users = await prisma.user.findMany({ where: { deleted: false } });
-  return res.json(users);
+  try {
+    const users = await prisma.user.findMany({ where: { deleted: false } });
+    return res.json(users);
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ error: "情報の取得に失敗しました。" });
+  }
 });
 
 router.delete("/admin/users/:id", async (req: Request, res: Response) => {
   const id = req.params.id;
-  const user = await prisma.user.update({
-    where: {
-      id,
-    },
-    data: {
-      deleted: true,
-    },
-  });
-  return res.json(user);
+  try {
+    const user = await prisma.user.update({
+      where: {
+        id,
+      },
+      data: {
+        deleted: true,
+      },
+    });
+    return res.json(user);
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ error: "削除に失敗しました。" });
+  }
 });
 
 router.post("/admin/teams", async (req: Request, res: Response) => {

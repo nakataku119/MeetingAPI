@@ -6,7 +6,7 @@ import { authAdmin } from "../utils/authAdmin";
 const router = Router();
 const prisma = new PrismaClient();
 
-// router.use(setUserToCache, authAdmin);
+router.use(setUserToCache, authAdmin);
 
 router.get("/admin/users", async (req: Request, res: Response) => {
   try {

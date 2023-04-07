@@ -16,8 +16,8 @@ app.get("/", (req: Request, res: Response) => {
   res.json("top response");
 });
 
-// app.use("/*", cors, checkJwt, setUserIdToCache);
-app.use("/*", cors);
+app.use("/*", cors, checkJwt, setUserIdToCache);
+// app.use("/*", cors);
 app.post("/logout", (req: Request, res: Response) => {
   console.log("logout");
   deleteCache();

@@ -11,22 +11,26 @@ router.post("/mtgs", async (req: Request, res: Response) => {
     return res.status(400).json({ error: "必須項目が入力されていません。" });
   }
 
-  const mtg = await prisma.mtg.create({
-    data: {
-      schedule: schedule,
-      freeAgenda: freeAgenda,
-      users: {
-        connect: users,
+  try {
+    const mtg = await prisma.mtg.create({
+      data: {
+        schedule: schedule,
+        freeAgenda: freeAgenda,
+        users: {
+          connect: users,
+        },
+        agendas: {
+          create: agendas,
+        },
+        team: {
+          connect: { id: teamId },
+        },
       },
-      agendas: {
-        create: agendas,
-      },
-      team: {
-        connect: { id: teamId },
-      },
-    },
-  });
-  return res.json(mtg);
+    });
+    return res.json(mtg);
+  } catch (error) {
+    return res.status(400).json({ error: "データの登録に失敗しました。" });
+  }
 });
 
 router.put("/mtgs/:id", async (req: Request, res: Response) => {

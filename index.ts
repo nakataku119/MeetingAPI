@@ -1,6 +1,5 @@
 import express, { Express, NextFunction, Request, Response } from "express";
 import usersRoutes from "./routes/users";
-import teamsRoutes from "./routes/teams";
 import agendaRoutes from "./routes/agendas";
 import meetingRoutes from "./routes/meetings";
 import adminRoutes from "./routes/admin";
@@ -17,22 +16,15 @@ app.get("/", (req: Request, res: Response) => {
   res.json("top response");
 });
 
-app.use("/*", cors, checkJwt, setUserIdToCache);
-
+// app.use("/*", cors, checkJwt, setUserIdToCache);
+app.use("/*", cors);
 app.post("/logout", (req: Request, res: Response) => {
   console.log("logout");
   deleteCache();
   res.json("キャッシュを削除しました。");
 });
 
-app.use(
-  "/",
-  usersRoutes,
-  teamsRoutes,
-  agendaRoutes,
-  meetingRoutes,
-  adminRoutes
-);
+app.use("/", usersRoutes, agendaRoutes, meetingRoutes, adminRoutes);
 
 app.listen(8080, () => {
   console.log("8080起動");

@@ -6,23 +6,28 @@ const router = Router();
 const prisma = new PrismaClient();
 
 router.get("/users/me", async (req: Request, res: Response) => {
-  const currentUser = await prisma.user.findUnique({
-    where: { id: getUserIdFromCache() },
-    include: {
-      mtgs: {
-        include: { agendas: true, users: { where: { deleted: false } } },
-      },
-      teams: {
-        where: { deleted: false },
-        include: {
-          users: {
-            where: { NOT: { id: getUserIdFromCache() }, deleted: false },
+  try {
+    const currentUser = await prisma.user.findUnique({
+      where: { id: getUserIdFromCache() },
+      include: {
+        mtgs: {
+          include: { agendas: true, users: { where: { deleted: false } } },
+        },
+        teams: {
+          where: { deleted: false },
+          include: {
+            users: {
+              where: { NOT: { id: getUserIdFromCache() }, deleted: false },
+            },
           },
         },
       },
-    },
-  });
-  return res.json(currentUser);
+    });
+    return res.json(currentUser);
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ error: "ユーザー情報の取得に失敗しました。" });
+  }
 });
 
 router.post("/users", async (req: Request, res: Response) => {

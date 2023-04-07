@@ -43,18 +43,24 @@ router.post("/users", async (req: Request, res: Response) => {
 
 router.put("/users", async (req: Request, res: Response) => {
   const { name } = req.body;
+
   if (!name) {
-    return;
+    return res.status(400).json({ error: "ユーザー名は必須です。" });
   }
-  const user = await prisma.user.update({
-    where: {
-      id: getUserIdFromCache(),
-    },
-    data: {
-      name,
-    },
-  });
-  return res.json(user);
+
+  try {
+    const user = await prisma.user.update({
+      where: {
+        id: getUserIdFromCache(),
+      },
+      data: {
+        name,
+      },
+    });
+    return res.json(user);
+  } catch (error) {
+    return res.status(400).json({ error: "更新に失敗しました。" });
+  }
 });
 
 export default router;

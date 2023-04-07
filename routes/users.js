@@ -15,47 +15,64 @@ const userId_1 = require("../utils/userId");
 const router = (0, express_1.Router)();
 const prisma = new client_1.PrismaClient();
 router.get("/users/me", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const currentUser = yield prisma.user.findUnique({
-        where: { id: (0, userId_1.getUserIdFromCache)() },
-        include: {
-            mtgs: {
-                include: { agendas: true, users: { where: { deleted: false } } },
-            },
-            teams: {
-                where: { deleted: false },
-                include: {
-                    users: {
-                        where: { NOT: { id: (0, userId_1.getUserIdFromCache)() }, deleted: false },
+    try {
+        const currentUser = yield prisma.user.findUnique({
+            where: { id: (0, userId_1.getUserIdFromCache)() },
+            include: {
+                mtgs: {
+                    include: { agendas: true, users: { where: { deleted: false } } },
+                },
+                teams: {
+                    where: { deleted: false },
+                    include: {
+                        users: {
+                            where: { NOT: { id: (0, userId_1.getUserIdFromCache)() }, deleted: false },
+                        },
                     },
                 },
             },
-        },
-    });
-    return res.json(currentUser);
+        });
+        return res.json(currentUser);
+    }
+    catch (error) {
+        console.log(error);
+        res.status(400).json({ error: "ユーザー情報の取得に失敗しました。" });
+    }
 }));
 router.post("/users", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name } = req.body;
-    const user = yield prisma.user.create({
-        data: {
-            id: (0, userId_1.getUserIdFromCache)(),
-            name: name,
-        },
-    });
-    return res.json(user);
+    try {
+        const user = yield prisma.user.create({
+            data: {
+                id: (0, userId_1.getUserIdFromCache)(),
+                name: name,
+            },
+        });
+        return res.json(user);
+    }
+    catch (error) {
+        console.log(error);
+        return res.status(400).json({ error: "作成に失敗ました。" });
+    }
 }));
 router.put("/users", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name } = req.body;
     if (!name) {
-        return;
+        return res.status(400).json({ error: "ユーザー名は必須です。" });
     }
-    const user = yield prisma.user.update({
-        where: {
-            id: (0, userId_1.getUserIdFromCache)(),
-        },
-        data: {
-            name,
-        },
-    });
-    return res.json(user);
+    try {
+        const user = yield prisma.user.update({
+            where: {
+                id: (0, userId_1.getUserIdFromCache)(),
+            },
+            data: {
+                name,
+            },
+        });
+        return res.json(user);
+    }
+    catch (error) {
+        return res.status(400).json({ error: "更新に失敗しました。" });
+    }
 }));
 exports.default = router;

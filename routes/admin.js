@@ -11,75 +11,115 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const client_1 = require("@prisma/client");
-const currentUser_1 = require("../utils/currentUser");
-const authAdmin_1 = require("../utils/authAdmin");
 const router = (0, express_1.Router)();
 const prisma = new client_1.PrismaClient();
-router.use(currentUser_1.setUserToCache, authAdmin_1.authAdmin);
+// router.use(setUserToCache, authAdmin);
 router.get("/admin/users", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const users = yield prisma.user.findMany({ where: { deleted: false } });
-    return res.json(users);
+    try {
+        const users = yield prisma.user.findMany({ where: { deleted: false } });
+        return res.json(users);
+    }
+    catch (error) {
+        console.log(error);
+        return res.status(400).json({ error: "情報の取得に失敗しました。" });
+    }
 }));
 router.delete("/admin/users/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
-    const user = yield prisma.user.update({
-        where: {
-            id,
-        },
-        data: {
-            deleted: true,
-        },
-    });
-    return res.json(user);
+    try {
+        const user = yield prisma.user.update({
+            where: {
+                id,
+            },
+            data: {
+                deleted: true,
+            },
+        });
+        return res.json(user);
+    }
+    catch (error) {
+        console.log(error);
+        res.status(400).json({ error: "削除に失敗しました。" });
+    }
 }));
 router.post("/admin/teams", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { name, members } = req.body.data;
-    const team = yield prisma.team.create({
-        data: {
-            name: name,
-            users: {
-                connect: members,
+    const { name, members } = req.body;
+    if (!name) {
+        return res.status(400).json({ error: "必須項目があります。" });
+    }
+    try {
+        const team = yield prisma.team.create({
+            data: {
+                name: name,
+                users: {
+                    connect: members,
+                },
             },
-        },
-    });
-    return res.json(team);
+        });
+        return res.json(team);
+    }
+    catch (error) {
+        console.log(error);
+        return res.status(400).json({ error: "登録に失敗しました。" });
+    }
 }));
 router.get("/admin/teams", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const teams = yield prisma.team.findMany({
-        where: { deleted: false },
-        include: {
-            users: true,
-        },
-    });
-    return res.json(teams);
+    try {
+        const teams = yield prisma.team.findMany({
+            where: { deleted: false },
+            include: {
+                users: true,
+            },
+        });
+        return res.json(teams);
+    }
+    catch (error) {
+        console.log(error);
+        return res.status(400).json({ error: "取得に失敗しました。" });
+    }
 }));
 router.put("/admin/teams/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = Number(req.params.id);
-    const { members, name } = req.body.data;
-    const team = yield prisma.team.update({
-        where: {
-            id,
-        },
-        data: {
-            name: name,
-            users: {
-                set: members,
+    const { members, name } = req.body;
+    if (!name) {
+        return res.status(400).json({ error: "必須項目があります。" });
+    }
+    try {
+        const team = yield prisma.team.update({
+            where: {
+                id,
             },
-        },
-        include: {
-            users: true,
-        },
-    });
-    return res.json(team);
+            data: {
+                name: name,
+                users: {
+                    set: members,
+                },
+            },
+            include: {
+                users: true,
+            },
+        });
+        return res.json(team);
+    }
+    catch (error) {
+        console.log(error);
+        res.json(400).json({ error: "更新に失敗しました。" });
+    }
 }));
 router.delete("/admin/teams/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = Number(req.params.id);
-    const team = yield prisma.team.update({
-        where: {
-            id,
-        },
-        data: { deleted: true },
-    });
-    return res.json(team);
+    try {
+        const team = yield prisma.team.update({
+            where: {
+                id,
+            },
+            data: { deleted: true },
+        });
+        return res.json(team);
+    }
+    catch (error) {
+        console.log(error);
+        res.status(400).json({ error: "削除に失敗しました。" });
+    }
 }));
 exports.default = router;

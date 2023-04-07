@@ -14,61 +14,85 @@ const client_1 = require("@prisma/client");
 const router = (0, express_1.Router)();
 const prisma = new client_1.PrismaClient();
 router.post("/mtgs", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { schedule, teamId, users, agendas, freeAgenda } = req.body.data;
-    const mtg = yield prisma.mtg.create({
-        data: {
-            schedule: schedule,
-            freeAgenda: freeAgenda,
-            users: {
-                connect: users,
+    const { schedule, teamId, users, agendas, freeAgenda } = req.body;
+    if (!schedule || !teamId) {
+        return res.status(400).json({ error: "必須項目が入力されていません。" });
+    }
+    try {
+        const mtg = yield prisma.mtg.create({
+            data: {
+                schedule: schedule,
+                freeAgenda: freeAgenda,
+                users: {
+                    connect: users,
+                },
+                agendas: {
+                    create: agendas,
+                },
+                team: {
+                    connect: { id: teamId },
+                },
             },
-            agendas: {
-                create: agendas,
-            },
-            team: {
-                connect: { id: teamId },
-            },
-        },
-    });
-    return res.json(mtg);
+        });
+        return res.json(mtg);
+    }
+    catch (error) {
+        console.log(error);
+        return res.status(400).json({ error: "データの登録に失敗しました。" });
+    }
 }));
 router.put("/mtgs/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = Number(req.params.id);
-    const { schedule, users, agendas, teamId, freeAgenda } = req.body.data;
-    const mtg = yield prisma.mtg.update({
-        where: {
-            id,
-        },
-        data: {
-            schedule: schedule,
-            freeAgenda: freeAgenda,
-            users: {
-                set: users,
+    const { schedule, users, agendas, teamId, freeAgenda } = req.body;
+    if (!schedule || !teamId) {
+        return res.status(400).json({ error: "必須項目が入力されていません。" });
+    }
+    try {
+        const mtg = yield prisma.mtg.update({
+            where: {
+                id,
             },
-            agendas: {
-                create: agendas,
-            },
-            team: {
-                connect: {
-                    id: teamId,
+            data: {
+                schedule: schedule,
+                freeAgenda: freeAgenda,
+                users: {
+                    set: users,
+                },
+                agendas: {
+                    create: agendas,
+                },
+                team: {
+                    connect: {
+                        id: teamId,
+                    },
                 },
             },
-        },
-        include: {
-            team: true,
-            users: true,
-            agendas: true,
-        },
-    });
-    return res.json(mtg);
+            include: {
+                team: true,
+                users: true,
+                agendas: true,
+            },
+        });
+        return res.json(mtg);
+    }
+    catch (error) {
+        console.log(error);
+        return res.status(400).json({ error: "データの登録に失敗しました。" });
+    }
 }));
 router.delete("/mtgs/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = Number(req.params.id);
-    const mtg = yield prisma.mtg.delete({
-        where: {
-            id,
-        },
-    });
-    return res.json(mtg);
+    try {
+        const mtg = yield prisma.mtg.delete({
+            where: {
+                id,
+            },
+        });
+        return res.json(mtg);
+    }
+    catch (error) {
+        console.log(error);
+        return res.status(400).json({ error: "データの削除に失敗しました。" });
+    }
 }));
 exports.default = router;

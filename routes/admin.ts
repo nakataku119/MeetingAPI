@@ -37,7 +37,7 @@ router.delete("/admin/users/:id", async (req: Request, res: Response) => {
 });
 
 router.post("/admin/teams", async (req: Request, res: Response) => {
-  const { name, members } = req.body.data;
+  const { name, members } = req.body;
 
   if (!name) {
     return res.status(400).json({ error: "必須項目があります。" });
@@ -76,7 +76,7 @@ router.get("/admin/teams", async (req: Request, res: Response) => {
 
 router.put("/admin/teams/:id", async (req: Request, res: Response) => {
   const id = Number(req.params.id);
-  const { members, name } = req.body.data;
+  const { members, name } = req.body;
 
   if (!name) {
     return res.status(400).json({ error: "必須項目があります。" });

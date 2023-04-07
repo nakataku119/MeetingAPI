@@ -77,12 +77,17 @@ router.put("/mtgs/:id", async (req: Request, res: Response) => {
 
 router.delete("/mtgs/:id", async (req: Request, res: Response) => {
   const id = Number(req.params.id);
-  const mtg = await prisma.mtg.delete({
-    where: {
-      id,
-    },
-  });
-  return res.json(mtg);
+  try {
+    const mtg = await prisma.mtg.delete({
+      where: {
+        id,
+      },
+    });
+    return res.json(mtg);
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ error: "データの削除に失敗しました。" });
+  }
 });
 
 export default router;

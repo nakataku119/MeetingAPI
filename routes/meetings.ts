@@ -5,7 +5,12 @@ const router = Router();
 const prisma = new PrismaClient();
 
 router.post("/mtgs", async (req: Request, res: Response) => {
-  const { schedule, teamId, users, agendas, freeAgenda } = req.body.data;
+  const { schedule, teamId, users, agendas, freeAgenda } = req.body;
+
+  if (!schedule || !teamId) {
+    return res.status(400).json({ error: "必須項目が入力されていません。" });
+  }
+
   const mtg = await prisma.mtg.create({
     data: {
       schedule: schedule,

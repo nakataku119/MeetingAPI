@@ -42,7 +42,7 @@ router.post("/users", async (req: Request, res: Response) => {
     return res.json(user);
   } catch (error) {
     console.log(error);
-    return res.status(400).json({ error: "更新に失敗ました。" });
+    return res.status(400).json({ error: "作成に失敗ました。" });
   }
 });
 

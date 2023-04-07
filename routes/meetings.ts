@@ -5,7 +5,7 @@ const router = Router();
 const prisma = new PrismaClient();
 
 router.post("/mtgs", async (req: Request, res: Response) => {
-  const { schedule, teamId, users, agendas, freeAgenda } = req.body;
+  const { schedule, teamId, users, agendas, freeAgenda } = req.body.data;
 
   if (!schedule || !teamId) {
     return res.status(400).json({ error: "必須項目が入力されていません。" });
@@ -36,7 +36,7 @@ router.post("/mtgs", async (req: Request, res: Response) => {
 
 router.put("/mtgs/:id", async (req: Request, res: Response) => {
   const id = Number(req.params.id);
-  const { schedule, users, agendas, teamId, freeAgenda } = req.body;
+  const { schedule, users, agendas, teamId, freeAgenda } = req.body.data;
 
   if (!schedule || !teamId) {
     return res.status(400).json({ error: "必須項目が入力されていません。" });

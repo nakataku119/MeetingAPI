@@ -32,13 +32,18 @@ router.get("/users/me", async (req: Request, res: Response) => {
 
 router.post("/users", async (req: Request, res: Response) => {
   const { name } = req.body;
-  const user = await prisma.user.create({
-    data: {
-      id: getUserIdFromCache(),
-      name: name,
-    },
-  });
-  return res.json(user);
+  try {
+    const user = await prisma.user.create({
+      data: {
+        id: getUserIdFromCache(),
+        name: name,
+      },
+    });
+    return res.json(user);
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ error: "更新に失敗ました。" });
+  }
 });
 
 router.put("/users", async (req: Request, res: Response) => {

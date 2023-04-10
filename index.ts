@@ -7,17 +7,43 @@ import { setUserIdToCache } from "./utils/userId";
 import { checkJwt } from "./utils/auth";
 import cors from "./utils/cors";
 import { deleteCache } from "./utils/cache";
+import swaggerUi from "swagger-ui-express";
+import swaggerSpec from "./swagger";
 
 const app: Express = express();
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use(express.json());
 
+/**
+ * @swagger
+ * /:
+ *  get:
+ *    description: ルート
+ *    responses:
+ *      200:
+ *        description: "top response"
+ */
 app.get("/", (req: Request, res: Response) => {
   res.json("top response");
 });
 
 app.use("/*", cors, checkJwt, setUserIdToCache);
-// app.use("/*", cors);
+
+/**
+ * @swagger
+ * /logout:
+ *  post:
+ *    description: ログインユーザーのキャッシュを削除
+ *    responses:
+ *      200:
+ *        description: 成功
+ *        content:
+ *          text/plain:
+ *            schema:
+ *              type: string
+ *              example: キャッシュを削除しました。
+ */
 app.post("/logout", (req: Request, res: Response) => {
   console.log("logout");
   deleteCache();

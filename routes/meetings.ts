@@ -7,7 +7,6 @@ const prisma = new PrismaClient();
 router.post("/mtgs", async (req: Request, res: Response) => {
   const { startTime, endTime, teamId, users, agendas, freeAgenda } =
     req.body.data;
-
   if (!startTime || !endTime || !teamId) {
     return res.status(400).json({ error: "必須項目が入力されていません。" });
   }

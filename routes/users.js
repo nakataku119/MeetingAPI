@@ -11,13 +11,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const client_1 = require("@prisma/client");
-const userId_1 = require("../utils/userId");
+const errorHandle_1 = require("../utils/errorHandle");
 const router = (0, express_1.Router)();
 const prisma = new client_1.PrismaClient();
 router.get("/users/me", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(req.body.id);
     try {
         const currentUser = yield prisma.user.findUnique({
-            where: { id: (0, userId_1.getUserIdFromCache)() },
+            where: { id: req.body.id },
             include: {
                 mtgs: {
                     include: { agendas: true, users: { where: { deleted: false } } },
@@ -26,7 +27,7 @@ router.get("/users/me", (req, res) => __awaiter(void 0, void 0, void 0, function
                     where: { deleted: false },
                     include: {
                         users: {
-                            where: { NOT: { id: (0, userId_1.getUserIdFromCache)() }, deleted: false },
+                            where: { NOT: { id: req.body.id }, deleted: false },
                         },
                     },
                 },
@@ -35,8 +36,7 @@ router.get("/users/me", (req, res) => __awaiter(void 0, void 0, void 0, function
         return res.json(currentUser);
     }
     catch (error) {
-        console.log(error);
-        res.status(400).json({ error: "ユーザー情報の取得に失敗しました。" });
+        (0, errorHandle_1.errorHandle)(error, res);
     }
 }));
 router.post("/users", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -44,7 +44,7 @@ router.post("/users", (req, res) => __awaiter(void 0, void 0, void 0, function* 
     try {
         const user = yield prisma.user.create({
             data: {
-                id: (0, userId_1.getUserIdFromCache)(),
+                id: req.body.sub,
                 name: name,
             },
         });
@@ -63,7 +63,7 @@ router.put("/users", (req, res) => __awaiter(void 0, void 0, void 0, function* (
     try {
         const user = yield prisma.user.update({
             where: {
-                id: (0, userId_1.getUserIdFromCache)(),
+                id: req.body.sub,
             },
             data: {
                 name,

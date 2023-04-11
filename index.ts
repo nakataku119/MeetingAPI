@@ -11,8 +11,6 @@ import { setUserIdToReq } from "./utils/userId";
 const app: Express = express();
 app.use(express.json());
 
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
 /**
  * @swagger
  * /:
@@ -26,8 +24,16 @@ app.get("/", (req: Request, res: Response) => {
   res.json("root response");
 });
 
-app.use("/", cors, setUserIdToReq);
-app.use("/", usersRoutes, agendaRoutes, meetingRoutes, adminRoutes);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use(
+  "/",
+  cors,
+  setUserIdToReq,
+  usersRoutes,
+  agendaRoutes,
+  meetingRoutes,
+  adminRoutes
+);
 
 app.listen(8080, () => {
   console.log("8080起動");

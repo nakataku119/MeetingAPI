@@ -45,7 +45,7 @@ router.delete("/admin/users/:id", (req, res) => __awaiter(void 0, void 0, void 0
     }
 }));
 router.post("/admin/teams", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { name, members } = req.body;
+    const { name, members } = req.body.data;
     if (!name) {
         return res.status(400).json({ error: "必須項目があります。" });
     }
@@ -82,7 +82,7 @@ router.get("/admin/teams", (req, res) => __awaiter(void 0, void 0, void 0, funct
 }));
 router.put("/admin/teams/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = Number(req.params.id);
-    const { members, name } = req.body;
+    const { members, name } = req.body.data;
     if (!name) {
         return res.status(400).json({ error: "必須項目があります。" });
     }

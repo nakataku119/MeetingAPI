@@ -37,8 +37,7 @@ router.delete("/admin/users/:id", async (req: Request, res: Response) => {
 });
 
 router.post("/admin/teams", async (req: Request, res: Response) => {
-  const { name, members } = req.body;
-
+  const { name, members } = req.body.data;
   if (!name) {
     return res.status(400).json({ error: "必須項目があります。" });
   }
@@ -54,7 +53,7 @@ router.post("/admin/teams", async (req: Request, res: Response) => {
     });
     return res.json(team);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return res.status(400).json({ error: "登録に失敗しました。" });
   }
 });
@@ -76,7 +75,7 @@ router.get("/admin/teams", async (req: Request, res: Response) => {
 
 router.put("/admin/teams/:id", async (req: Request, res: Response) => {
   const id = Number(req.params.id);
-  const { members, name } = req.body;
+  const { members, name } = req.body.data;
 
   if (!name) {
     return res.status(400).json({ error: "必須項目があります。" });

@@ -11,11 +11,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Add file to dist
-        run: cp -r * dist/
-
       - name: Generate deployment package
-        run: zip -r ../../deploy.zip ./dist -x '*.git*'
+        run: zip -r ../deploy.zip . -x '*.git*'
 
       - name: Set unique version number
         run: echo "VERSION=$(git rev-parse HEAD | cut -c 1-8)" >> $GITHUB_ENV
@@ -27,7 +24,7 @@ jobs:
           aws_secret_key: ${{secrets.AWS_SECRET_KEY}}
           application_name: meeting-app
           environment_name: Meetingapp-env
-          version_label: "1.2.3"
+          version_label: "1.2.4"
           region: ap-northeast-1
           deployment_package: ../deploy.zip
 

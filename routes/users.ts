@@ -1,6 +1,5 @@
 import { Router, Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
-import { getUserIdFromCache } from "../utils/userId";
 
 const router = Router();
 const prisma = new PrismaClient();
@@ -8,7 +7,7 @@ const prisma = new PrismaClient();
 router.get("/users/me", async (req: Request, res: Response) => {
   try {
     const currentUser = await prisma.user.findUnique({
-      where: { id: getUserIdFromCache() },
+      where: { id: req.body.sub },
       include: {
         mtgs: {
           include: { agendas: true, users: { where: { deleted: false } } },
@@ -17,7 +16,7 @@ router.get("/users/me", async (req: Request, res: Response) => {
           where: { deleted: false },
           include: {
             users: {
-              where: { NOT: { id: getUserIdFromCache() }, deleted: false },
+              where: { NOT: { id: req.body.sub }, deleted: false },
             },
           },
         },
@@ -35,7 +34,7 @@ router.post("/users", async (req: Request, res: Response) => {
   try {
     const user = await prisma.user.create({
       data: {
-        id: getUserIdFromCache(),
+        id: req.body.sub,
         name: name,
       },
     });
@@ -56,7 +55,7 @@ router.put("/users", async (req: Request, res: Response) => {
   try {
     const user = await prisma.user.update({
       where: {
-        id: getUserIdFromCache(),
+        id: req.body.sub,
       },
       data: {
         name,

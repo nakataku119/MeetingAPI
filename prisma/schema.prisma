@@ -29,7 +29,8 @@ model Team {
 
 model Mtg {
   id Int     @id @default(autoincrement())
-  schedule DateTime
+  startTime DateTime
+  endTime DateTime
   users User[]
   agendas Agenda[]
   freeAgenda String?

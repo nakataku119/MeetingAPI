@@ -41,8 +41,7 @@ router.post("/users", async (req: Request, res: Response) => {
     });
     return res.json(user);
   } catch (error) {
-    console.log(error);
-    return res.status(400).json({ error: "作成に失敗ました。" });
+    errorHandle(error, res);
   }
 });
 
@@ -50,7 +49,7 @@ router.put("/users", async (req: Request, res: Response) => {
   const { name } = req.body;
 
   if (!name) {
-    return res.status(400).json({ error: "ユーザー名は必須です。" });
+    return res.status(422).json({ error: "ユーザー名は必須です。" });
   }
 
   try {
@@ -64,7 +63,7 @@ router.put("/users", async (req: Request, res: Response) => {
     });
     return res.json(user);
   } catch (error) {
-    return res.status(400).json({ error: "更新に失敗しました。" });
+    errorHandle(error, res);
   }
 });
 

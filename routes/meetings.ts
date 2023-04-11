@@ -1,5 +1,6 @@
 import { Router, Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
+import { errorHandle } from "../utils/errorHandle";
 
 const router = Router();
 const prisma = new PrismaClient();
@@ -8,7 +9,7 @@ router.post("/mtgs", async (req: Request, res: Response) => {
   const { startTime, endTime, teamId, users, agendas, freeAgenda } =
     req.body.data;
   if (!startTime || !endTime || !teamId) {
-    return res.status(400).json({ error: "必須項目が入力されていません。" });
+    return res.status(422).json({ error: "必須項目が入力されていません。" });
   }
 
   try {
@@ -30,8 +31,7 @@ router.post("/mtgs", async (req: Request, res: Response) => {
     });
     return res.json(mtg);
   } catch (error) {
-    console.log(error);
-    return res.status(400).json({ error: "データの登録に失敗しました。" });
+    errorHandle(error, res);
   }
 });
 
@@ -41,7 +41,7 @@ router.put("/mtgs/:id", async (req: Request, res: Response) => {
     req.body.data;
 
   if (!startTime || !endTime || !teamId) {
-    return res.status(400).json({ error: "必須項目が入力されていません。" });
+    return res.status(422).json({ error: "必須項目が入力されていません。" });
   }
 
   try {
@@ -73,8 +73,7 @@ router.put("/mtgs/:id", async (req: Request, res: Response) => {
     });
     return res.json(mtg);
   } catch (error) {
-    console.log(error);
-    return res.status(400).json({ error: "データの登録に失敗しました。" });
+    errorHandle(error, res);
   }
 });
 
@@ -88,8 +87,7 @@ router.delete("/mtgs/:id", async (req: Request, res: Response) => {
     });
     return res.json(mtg);
   } catch (error) {
-    console.log(error);
-    return res.status(400).json({ error: "データの削除に失敗しました。" });
+    errorHandle(error, res);
   }
 });
 

@@ -1,6 +1,7 @@
 import { Router, Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 import { authAdmin } from "../utils/authAdmin";
+import { errorHandle } from "../utils/errorHandle";
 
 const router = Router();
 const prisma = new PrismaClient();
@@ -12,8 +13,7 @@ router.get("/admin/users", async (req: Request, res: Response) => {
     const users = await prisma.user.findMany({ where: { deleted: false } });
     return res.json(users);
   } catch (error) {
-    console.log(error);
-    return res.status(400).json({ error: "情報の取得に失敗しました。" });
+    errorHandle(error, res);
   }
 });
 
@@ -30,8 +30,7 @@ router.delete("/admin/users/:id", async (req: Request, res: Response) => {
     });
     return res.json(user);
   } catch (error) {
-    console.log(error);
-    res.status(400).json({ error: "削除に失敗しました。" });
+    errorHandle(error, res);
   }
 });
 
@@ -52,8 +51,7 @@ router.post("/admin/teams", async (req: Request, res: Response) => {
     });
     return res.json(team);
   } catch (error) {
-    console.error(error);
-    return res.status(400).json({ error: "登録に失敗しました。" });
+    errorHandle(error, res);
   }
 });
 
@@ -67,8 +65,7 @@ router.get("/admin/teams", async (req: Request, res: Response) => {
     });
     return res.json(teams);
   } catch (error) {
-    console.log(error);
-    return res.status(400).json({ error: "取得に失敗しました。" });
+    errorHandle(error, res);
   }
 });
 
@@ -97,8 +94,7 @@ router.put("/admin/teams/:id", async (req: Request, res: Response) => {
     });
     return res.json(team);
   } catch (error) {
-    console.log(error);
-    res.json(400).json({ error: "更新に失敗しました。" });
+    errorHandle(error, res);
   }
 });
 
@@ -114,8 +110,7 @@ router.delete("/admin/teams/:id", async (req: Request, res: Response) => {
     });
     return res.json(team);
   } catch (error) {
-    console.log(error);
-    res.status(400).json({ error: "削除に失敗しました。" });
+    errorHandle(error, res);
   }
 });
 

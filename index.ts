@@ -3,7 +3,6 @@ import usersRoutes from "./routes/users";
 import agendaRoutes from "./routes/agendas";
 import meetingRoutes from "./routes/meetings";
 import adminRoutes from "./routes/admin";
-import { checkJwt } from "./utils/auth";
 import cors from "./utils/cors";
 import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./swagger";
@@ -27,7 +26,7 @@ app.get("/", (req: Request, res: Response) => {
   res.json("root response");
 });
 
-app.use("/", cors, checkJwt, setUserIdToReq);
+app.use("/", cors, setUserIdToReq);
 app.use("/", usersRoutes, agendaRoutes, meetingRoutes, adminRoutes);
 
 app.listen(8080, () => {

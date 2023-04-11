@@ -11,11 +11,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const client_1 = require("@prisma/client");
-const currentUser_1 = require("../utils/currentUser");
 const authAdmin_1 = require("../utils/authAdmin");
 const router = (0, express_1.Router)();
 const prisma = new client_1.PrismaClient();
-router.use(currentUser_1.setUserToCache, authAdmin_1.authAdmin);
+router.use(authAdmin_1.authAdmin);
 router.get("/admin/users", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const users = yield prisma.user.findMany({ where: { deleted: false } });
@@ -61,7 +60,7 @@ router.post("/admin/teams", (req, res) => __awaiter(void 0, void 0, void 0, func
         return res.json(team);
     }
     catch (error) {
-        console.log(error);
+        console.error(error);
         return res.status(400).json({ error: "登録に失敗しました。" });
     }
 }));

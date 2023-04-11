@@ -1,13 +1,15 @@
 import { Router, Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
+import { errorHandle } from "../utils/errorHandle";
 
 const router = Router();
 const prisma = new PrismaClient();
 
 router.get("/users/me", async (req: Request, res: Response) => {
+  console.log(req.body.id);
   try {
     const currentUser = await prisma.user.findUnique({
-      where: { id: req.body.sub },
+      where: { id: req.body.id },
       include: {
         mtgs: {
           include: { agendas: true, users: { where: { deleted: false } } },
@@ -16,7 +18,7 @@ router.get("/users/me", async (req: Request, res: Response) => {
           where: { deleted: false },
           include: {
             users: {
-              where: { NOT: { id: req.body.sub }, deleted: false },
+              where: { NOT: { id: req.body.id }, deleted: false },
             },
           },
         },
@@ -24,8 +26,7 @@ router.get("/users/me", async (req: Request, res: Response) => {
     });
     return res.json(currentUser);
   } catch (error) {
-    console.log(error);
-    res.status(400).json({ error: "ユーザー情報の取得に失敗しました。" });
+    errorHandle(error, res);
   }
 });
 

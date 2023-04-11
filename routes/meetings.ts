@@ -5,16 +5,17 @@ const router = Router();
 const prisma = new PrismaClient();
 
 router.post("/mtgs", async (req: Request, res: Response) => {
-  const { schedule, teamId, users, agendas, freeAgenda } = req.body.data;
-
-  if (!schedule || !teamId) {
+  const { startTime, endTime, teamId, users, agendas, freeAgenda } =
+    req.body.data;
+  if (!startTime || !endTime || !teamId) {
     return res.status(400).json({ error: "必須項目が入力されていません。" });
   }
 
   try {
     const mtg = await prisma.mtg.create({
       data: {
-        schedule: schedule,
+        startTime: startTime,
+        endTime: endTime,
         freeAgenda: freeAgenda,
         users: {
           connect: users,
@@ -36,9 +37,10 @@ router.post("/mtgs", async (req: Request, res: Response) => {
 
 router.put("/mtgs/:id", async (req: Request, res: Response) => {
   const id = Number(req.params.id);
-  const { schedule, users, agendas, teamId, freeAgenda } = req.body.data;
+  const { startTime, endTime, teamId, users, agendas, freeAgenda } =
+    req.body.data;
 
-  if (!schedule || !teamId) {
+  if (!startTime || !endTime || !teamId) {
     return res.status(400).json({ error: "必須項目が入力されていません。" });
   }
 
@@ -48,7 +50,8 @@ router.put("/mtgs/:id", async (req: Request, res: Response) => {
         id,
       },
       data: {
-        schedule: schedule,
+        startTime: startTime,
+        endTime: endTime,
         freeAgenda: freeAgenda,
         users: {
           set: users,

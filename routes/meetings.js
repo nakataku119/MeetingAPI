@@ -14,14 +14,15 @@ const client_1 = require("@prisma/client");
 const router = (0, express_1.Router)();
 const prisma = new client_1.PrismaClient();
 router.post("/mtgs", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { schedule, teamId, users, agendas, freeAgenda } = req.body.data;
-    if (!schedule || !teamId) {
+    const { startTime, endTime, teamId, users, agendas, freeAgenda } = req.body.data;
+    if (!startTime || !endTime || !teamId) {
         return res.status(400).json({ error: "必須項目が入力されていません。" });
     }
     try {
         const mtg = yield prisma.mtg.create({
             data: {
-                schedule: schedule,
+                startTime: startTime,
+                endTime: endTime,
                 freeAgenda: freeAgenda,
                 users: {
                     connect: users,
@@ -43,8 +44,8 @@ router.post("/mtgs", (req, res) => __awaiter(void 0, void 0, void 0, function* (
 }));
 router.put("/mtgs/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = Number(req.params.id);
-    const { schedule, users, agendas, teamId, freeAgenda } = req.body.data;
-    if (!schedule || !teamId) {
+    const { startTime, endTime, teamId, users, agendas, freeAgenda } = req.body.data;
+    if (!startTime || !endTime || !teamId) {
         return res.status(400).json({ error: "必須項目が入力されていません。" });
     }
     try {
@@ -53,7 +54,8 @@ router.put("/mtgs/:id", (req, res) => __awaiter(void 0, void 0, void 0, function
                 id,
             },
             data: {
-                schedule: schedule,
+                startTime: startTime,
+                endTime: endTime,
                 freeAgenda: freeAgenda,
                 users: {
                     set: users,

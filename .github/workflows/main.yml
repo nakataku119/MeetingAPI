@@ -12,7 +12,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Add file to dist
-        run: mv * dist/
+        run: cp -r * dist/
 
       - name: Generate deployment package
         run: zip -r ../../deploy.zip ./dist -x '*.git*'
@@ -27,7 +27,7 @@ jobs:
           aws_secret_key: ${{secrets.AWS_SECRET_KEY}}
           application_name: meeting-app
           environment_name: Meetingapp-env
-          version_label: "1.2.2"
+          version_label: "1.2.3"
           region: ap-northeast-1
           deployment_package: ../deploy.zip
 

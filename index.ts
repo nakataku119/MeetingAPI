@@ -4,8 +4,8 @@ import agendaRoutes from "./routes/agendas";
 import meetingRoutes from "./routes/meetings";
 import adminRoutes from "./routes/admin";
 import cors from "./utils/cors";
-import swaggerUi from "swagger-ui-express";
-import swaggerSpec from "./swagger";
+// import swaggerUi from "swagger-ui-express";
+// import swaggerSpec from "./swagger";
 import { setUserIdToReq } from "./utils/userId";
 
 const app: Express = express();
@@ -24,7 +24,7 @@ app.get("/", (req: Request, res: Response) => {
   res.json("root response");
 });
 
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+// app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use(
   "/",
   cors,

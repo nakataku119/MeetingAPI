@@ -11,7 +11,7 @@ export const authAdmin = async (
 ) => {
   try {
     const currentUser = await prisma.user.findUnique({
-      where: { id: req.body.sub },
+      where: { id: req.body.id },
     });
     if (currentUser?.admin) {
       next();

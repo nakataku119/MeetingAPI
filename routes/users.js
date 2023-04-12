@@ -44,7 +44,7 @@ router.post("/users", (req, res) => __awaiter(void 0, void 0, void 0, function* 
     try {
         const user = yield prisma.user.create({
             data: {
-                id: req.body.sub,
+                id: req.body.id,
                 name: name,
             },
         });
@@ -62,7 +62,7 @@ router.put("/users", (req, res) => __awaiter(void 0, void 0, void 0, function* (
     try {
         const user = yield prisma.user.update({
             where: {
-                id: req.body.sub,
+                id: req.body.id,
             },
             data: {
                 name,

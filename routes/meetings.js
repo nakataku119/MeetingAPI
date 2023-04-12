@@ -11,12 +11,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const client_1 = require("@prisma/client");
+const errorHandle_1 = require("../utils/errorHandle");
 const router = (0, express_1.Router)();
 const prisma = new client_1.PrismaClient();
 router.post("/mtgs", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { startTime, endTime, teamId, users, agendas, freeAgenda } = req.body.data;
     if (!startTime || !endTime || !teamId) {
-        return res.status(400).json({ error: "必須項目が入力されていません。" });
+        return res.status(422).json({ error: "必須項目が入力されていません。" });
     }
     try {
         const mtg = yield prisma.mtg.create({
@@ -38,15 +39,14 @@ router.post("/mtgs", (req, res) => __awaiter(void 0, void 0, void 0, function* (
         return res.json(mtg);
     }
     catch (error) {
-        console.log(error);
-        return res.status(400).json({ error: "データの登録に失敗しました。" });
+        (0, errorHandle_1.errorHandle)(error, res);
     }
 }));
 router.put("/mtgs/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = Number(req.params.id);
     const { startTime, endTime, teamId, users, agendas, freeAgenda } = req.body.data;
     if (!startTime || !endTime || !teamId) {
-        return res.status(400).json({ error: "必須項目が入力されていません。" });
+        return res.status(422).json({ error: "必須項目が入力されていません。" });
     }
     try {
         const mtg = yield prisma.mtg.update({
@@ -78,8 +78,7 @@ router.put("/mtgs/:id", (req, res) => __awaiter(void 0, void 0, void 0, function
         return res.json(mtg);
     }
     catch (error) {
-        console.log(error);
-        return res.status(400).json({ error: "データの登録に失敗しました。" });
+        (0, errorHandle_1.errorHandle)(error, res);
     }
 }));
 router.delete("/mtgs/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -93,8 +92,7 @@ router.delete("/mtgs/:id", (req, res) => __awaiter(void 0, void 0, void 0, funct
         return res.json(mtg);
     }
     catch (error) {
-        console.log(error);
-        return res.status(400).json({ error: "データの削除に失敗しました。" });
+        (0, errorHandle_1.errorHandle)(error, res);
     }
 }));
 exports.default = router;

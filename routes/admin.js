@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const client_1 = require("@prisma/client");
 const authAdmin_1 = require("../utils/authAdmin");
+const errorHandle_1 = require("../utils/errorHandle");
 const router = (0, express_1.Router)();
 const prisma = new client_1.PrismaClient();
 router.use(authAdmin_1.authAdmin);
@@ -21,8 +22,7 @@ router.get("/admin/users", (req, res) => __awaiter(void 0, void 0, void 0, funct
         return res.json(users);
     }
     catch (error) {
-        console.log(error);
-        return res.status(400).json({ error: "情報の取得に失敗しました。" });
+        (0, errorHandle_1.errorHandle)(error, res);
     }
 }));
 router.delete("/admin/users/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -39,8 +39,7 @@ router.delete("/admin/users/:id", (req, res) => __awaiter(void 0, void 0, void 0
         return res.json(user);
     }
     catch (error) {
-        console.log(error);
-        res.status(400).json({ error: "削除に失敗しました。" });
+        (0, errorHandle_1.errorHandle)(error, res);
     }
 }));
 router.post("/admin/teams", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -60,8 +59,7 @@ router.post("/admin/teams", (req, res) => __awaiter(void 0, void 0, void 0, func
         return res.json(team);
     }
     catch (error) {
-        console.error(error);
-        return res.status(400).json({ error: "登録に失敗しました。" });
+        (0, errorHandle_1.errorHandle)(error, res);
     }
 }));
 router.get("/admin/teams", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -75,8 +73,7 @@ router.get("/admin/teams", (req, res) => __awaiter(void 0, void 0, void 0, funct
         return res.json(teams);
     }
     catch (error) {
-        console.log(error);
-        return res.status(400).json({ error: "取得に失敗しました。" });
+        (0, errorHandle_1.errorHandle)(error, res);
     }
 }));
 router.put("/admin/teams/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -103,8 +100,7 @@ router.put("/admin/teams/:id", (req, res) => __awaiter(void 0, void 0, void 0, f
         return res.json(team);
     }
     catch (error) {
-        console.log(error);
-        res.json(400).json({ error: "更新に失敗しました。" });
+        (0, errorHandle_1.errorHandle)(error, res);
     }
 }));
 router.delete("/admin/teams/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -119,8 +115,7 @@ router.delete("/admin/teams/:id", (req, res) => __awaiter(void 0, void 0, void 0
         return res.json(team);
     }
     catch (error) {
-        console.log(error);
-        res.status(400).json({ error: "削除に失敗しました。" });
+        (0, errorHandle_1.errorHandle)(error, res);
     }
 }));
 exports.default = router;

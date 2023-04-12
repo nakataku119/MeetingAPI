@@ -51,14 +51,13 @@ router.post("/users", (req, res) => __awaiter(void 0, void 0, void 0, function* 
         return res.json(user);
     }
     catch (error) {
-        console.log(error);
-        return res.status(400).json({ error: "作成に失敗ました。" });
+        (0, errorHandle_1.errorHandle)(error, res);
     }
 }));
 router.put("/users", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name } = req.body;
     if (!name) {
-        return res.status(400).json({ error: "ユーザー名は必須です。" });
+        return res.status(422).json({ error: "ユーザー名は必須です。" });
     }
     try {
         const user = yield prisma.user.update({
@@ -72,7 +71,7 @@ router.put("/users", (req, res) => __awaiter(void 0, void 0, void 0, function* (
         return res.json(user);
     }
     catch (error) {
-        return res.status(400).json({ error: "更新に失敗しました。" });
+        (0, errorHandle_1.errorHandle)(error, res);
     }
 }));
 exports.default = router;

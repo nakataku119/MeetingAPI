@@ -6,9 +6,11 @@ const router = Router();
 const prisma = new PrismaClient();
 
 router.post("/mtgs", async (req: Request, res: Response) => {
-  const { startTime, endTime, teamId, users, agendas, freeAgenda } =
-    req.body.data;
-  if (!startTime || !endTime || !teamId) {
+  const { startTime, endTime, users, agendas, freeAgenda } = req.body.data;
+  if (!startTime || !endTime) {
+    return res.status(422).json({ error: "必須項目が入力されていません。" });
+  }
+  if (startTime >= endTime) {
     return res.status(422).json({ error: "必須項目が入力されていません。" });
   }
 
@@ -24,9 +26,6 @@ router.post("/mtgs", async (req: Request, res: Response) => {
         agendas: {
           create: agendas,
         },
-        team: {
-          connect: { id: teamId },
-        },
       },
     });
     return res.json(mtg);
@@ -37,10 +36,9 @@ router.post("/mtgs", async (req: Request, res: Response) => {
 
 router.put("/mtgs/:id", async (req: Request, res: Response) => {
   const id = Number(req.params.id);
-  const { startTime, endTime, teamId, users, agendas, freeAgenda } =
-    req.body.data;
+  const { startTime, endTime, users, agendas, freeAgenda } = req.body.data;
 
-  if (!startTime || !endTime || !teamId) {
+  if (!startTime || !endTime) {
     return res.status(422).json({ error: "必須項目が入力されていません。" });
   }
 
@@ -59,14 +57,8 @@ router.put("/mtgs/:id", async (req: Request, res: Response) => {
         agendas: {
           create: agendas,
         },
-        team: {
-          connect: {
-            id: teamId,
-          },
-        },
       },
       include: {
-        team: true,
         users: true,
         agendas: true,
       },

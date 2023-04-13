@@ -8,15 +8,6 @@ const prisma = new PrismaClient();
 
 router.use(authAdmin);
 
-router.get("/admin/users", async (req: Request, res: Response) => {
-  try {
-    const users = await prisma.user.findMany({ where: { deleted: false } });
-    return res.json(users);
-  } catch (error) {
-    errorHandle(error, res);
-  }
-});
-
 router.delete("/admin/users/:id", async (req: Request, res: Response) => {
   const id = req.params.id;
   try {

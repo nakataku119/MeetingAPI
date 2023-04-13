@@ -23,7 +23,6 @@ model Team {
   id Int     @id @default(autoincrement())
   name String @default("")
   users User[]
-  mtgs Mtg[]
   deleted Boolean @default(false) @map("is_deleted")
 }
 
@@ -34,8 +33,6 @@ model Mtg {
   users User[]
   agendas Agenda[]
   freeAgenda String?
-  team Team @relation(fields: [teamId], references: [id])
-  teamId Int
 }
 
 model Agenda {

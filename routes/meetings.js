@@ -15,8 +15,11 @@ const errorHandle_1 = require("../utils/errorHandle");
 const router = (0, express_1.Router)();
 const prisma = new client_1.PrismaClient();
 router.post("/mtgs", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { startTime, endTime, teamId, users, agendas, freeAgenda } = req.body.data;
-    if (!startTime || !endTime || !teamId) {
+    const { startTime, endTime, users, agendas, freeAgenda } = req.body.data;
+    if (!startTime || !endTime) {
+        return res.status(422).json({ error: "必須項目が入力されていません。" });
+    }
+    if (startTime >= endTime) {
         return res.status(422).json({ error: "必須項目が入力されていません。" });
     }
     try {
@@ -31,9 +34,6 @@ router.post("/mtgs", (req, res) => __awaiter(void 0, void 0, void 0, function* (
                 agendas: {
                     create: agendas,
                 },
-                team: {
-                    connect: { id: teamId },
-                },
             },
         });
         return res.json(mtg);
@@ -44,8 +44,8 @@ router.post("/mtgs", (req, res) => __awaiter(void 0, void 0, void 0, function* (
 }));
 router.put("/mtgs/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = Number(req.params.id);
-    const { startTime, endTime, teamId, users, agendas, freeAgenda } = req.body.data;
-    if (!startTime || !endTime || !teamId) {
+    const { startTime, endTime, users, agendas, freeAgenda } = req.body.data;
+    if (!startTime || !endTime) {
         return res.status(422).json({ error: "必須項目が入力されていません。" });
     }
     try {
@@ -63,14 +63,8 @@ router.put("/mtgs/:id", (req, res) => __awaiter(void 0, void 0, void 0, function
                 agendas: {
                     create: agendas,
                 },
-                team: {
-                    connect: {
-                        id: teamId,
-                    },
-                },
             },
             include: {
-                team: true,
                 users: true,
                 agendas: true,
             },

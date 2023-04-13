@@ -16,15 +16,6 @@ const errorHandle_1 = require("../utils/errorHandle");
 const router = (0, express_1.Router)();
 const prisma = new client_1.PrismaClient();
 router.use(authAdmin_1.authAdmin);
-router.get("/admin/users", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const users = yield prisma.user.findMany({ where: { deleted: false } });
-        return res.json(users);
-    }
-    catch (error) {
-        (0, errorHandle_1.errorHandle)(error, res);
-    }
-}));
 router.delete("/admin/users/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
     try {
